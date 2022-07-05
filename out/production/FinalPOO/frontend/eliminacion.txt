@@ -1,3 +1,5 @@
+            (Creacion de figuras)
+
             if(rectangleButton.isSelected()) {
 				newFigure = new Rectangle(startPoint, endPoint);
 			}

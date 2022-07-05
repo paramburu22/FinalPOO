@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -32,7 +33,9 @@ public class PaintPane extends BorderPane {
 	FigureToggleButton ellipseButton = new EllipseButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 	FigureToggleButton[] figureButtonsArr = { rectangleButton, circleButton, squareButton, ellipseButton};
-
+	private static final double INITIAL_BORDER = 1;
+	private double currentborde = 1;
+	Slider slider = new Slider(1, 50, INITIAL_BORDER);
 	// Dibujar una figura
 	Point startPoint;
 
@@ -55,10 +58,15 @@ public class PaintPane extends BorderPane {
 		}
 		VBox buttonsBox = new VBox(10); //espacio entre boton y boton
 		buttonsBox.getChildren().addAll(toolsArr);
+		slider.setShowTickMarks(true);
+		slider.setShowTickLabels(true);
+		slider.setMajorTickUnit(0.25f);
+		slider.setBlockIncrement(0.1f);
+		buttonsBox.getChildren().add(slider);
 		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
-		gc.setLineWidth(1);
+		gc.setLineWidth(slider.getValue()); // grosor del borde
 
 		canvas.setOnMousePressed(event -> {
 			//no es lo mismo que un click. Es cuando empieza a mantener apretado.
@@ -68,6 +76,8 @@ public class PaintPane extends BorderPane {
 		canvas.setOnMouseReleased(event -> {
 			//cuando lo suelto
 			Point endPoint = new Point(event.getX(), event.getY());
+
+			//tengo que soltar abajo a la derecha
 			if(startPoint == null || endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
@@ -75,14 +85,16 @@ public class PaintPane extends BorderPane {
 			Figure newFigure = null;
 			for(FigureToggleButton figureButton : figureButtonsArr){
 				if(figureButton.isSelected())
-					newFigure = figureButton.make(startPoint, endPoint);
+					newFigure = figureButton.make(startPoint, endPoint,lineColor,fillColor,gc.getLineWidth());
 			}
 
+			//una vez creada la figura anteriormente, pasamos a agregarla al back.
 			canvasState.addFigure(newFigure);
 			startPoint = null;
 			redrawCanvas();
 		});
 
+		//cuando muevo elmouse si tner clickeado nada
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;

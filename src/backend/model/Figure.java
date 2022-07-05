@@ -1,9 +1,16 @@
 package backend.model;
 
+import javafx.scene.paint.Color;
+
 public abstract class Figure {
 
-    abstract double area();
+    private Color lineColor;
+    private Color backGroundColor;
+    private double lineWidth;
 
-    abstract double perimeter();
-
+    Figure(Color lineColor, Color backGroundColor,double lineWidth){
+        this.backGroundColor = backGroundColor;
+        this.lineColor = lineColor;
+        this.lineWidth = lineWidth;
+    }
 }

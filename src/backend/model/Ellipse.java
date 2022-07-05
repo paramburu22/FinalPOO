@@ -1,25 +1,19 @@
 package backend.model;
 
+import javafx.scene.paint.Color;
+
 public class Ellipse extends Figure {
 
     protected final Point centerPoint;
     protected final double sMayorAxis, sMinorAxis;
 
-    public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
+    public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color lineColor, Color backGroundColor, double lineWidth) {
+        super(lineColor,backGroundColor,lineWidth);
         this.centerPoint = centerPoint;
         this.sMayorAxis = sMayorAxis;
         this.sMinorAxis = sMinorAxis;
     }
 
-    @Override
-    public double area() {
-        return Math.PI / 4 * sMayorAxis * sMinorAxis;
-    }
-
-    @Override
-    public double perimeter() {
-        return Math.PI / 2 * (sMayorAxis + sMinorAxis);
-    }
 
     @Override
     public String toString() {

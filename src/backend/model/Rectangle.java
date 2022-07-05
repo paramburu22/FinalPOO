@@ -1,10 +1,13 @@
 package backend.model;
 
+import javafx.scene.paint.Color;
+
 public class Rectangle extends Figure {
 
     protected final Point topLeft, bottomRight;
 
-    public Rectangle(Point topLeft, Point bottomRight) {
+    public Rectangle(Point topLeft, Point bottomRight, Color lineColor, Color backGroundColor, double lineWidth) {
+        super(lineColor,backGroundColor,lineWidth);
         this.topLeft = topLeft;
         this.bottomRight = bottomRight;
     }
@@ -17,15 +20,6 @@ public class Rectangle extends Figure {
         return Math.abs(topLeft.getY() - bottomRight.getY());
     }
 
-    @Override
-    public double area() {
-        return base() * height();
-    }
-
-    @Override
-    public double perimeter() {
-        return (base() + height()) * 2;
-    }
 
     @Override
     public String toString() {
