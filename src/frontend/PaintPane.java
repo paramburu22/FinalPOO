@@ -2,7 +2,7 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
-import frontend.Buttons.FigureToggleButton;
+import frontend.Buttons.*;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -26,11 +26,12 @@ public class PaintPane extends BorderPane {
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	ToggleButton circleButton = new ToggleButton("Círculo");
-	ToggleButton squareButton = new ToggleButton("Cuadrado");
-	ToggleButton ellipseButton = new ToggleButton("Elipse");
+	FigureToggleButton rectangleButton = new RectangleButton("Rectángulo");
+	FigureToggleButton circleButton = new CircleButton("Círculo");
+	FigureToggleButton squareButton = new SquareButton("Cuadrado");
+	FigureToggleButton ellipseButton = new EllipseButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
+	FigureToggleButton[] figureButtonsArr = { rectangleButton, circleButton, squareButton, ellipseButton};
 
 	// Dibujar una figura
 	Point startPoint;
@@ -45,6 +46,7 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
+
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -69,30 +71,13 @@ public class PaintPane extends BorderPane {
 			if(startPoint == null || endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
+			//cuando suelto el mouse se crea la figura.
 			Figure newFigure = null;
-			for(FigureToggleButton figureButton : figureButtons){
+			for(FigureToggleButton figureButton : figureButtonsArr){
 				if(figureButton.isSelected())
-					figureButton.build();
+					newFigure = figureButton.make(startPoint, endPoint);
 			}
 
-				// if "generalbutton".isselected()
-			if(rectangleButton.isSelected()) {
-				newFigure = new Rectangle(startPoint, endPoint);
-			}
-			else if(circleButton.isSelected()) {
-				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Circle(startPoint, circleRadius);
-			} else if(squareButton.isSelected()) {
-				double size = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Square(startPoint, size);
-			} else if(ellipseButton.isSelected()) {
-				Point centerPoint = new Point(Math.abs(endPoint.x + startPoint.x) / 2, (Math.abs((endPoint.y + startPoint.y)) / 2));
-				double sMayorAxis = Math.abs(endPoint.x - startPoint.x);
-				double sMinorAxis = Math.abs(endPoint.y - startPoint.y);
-				newFigure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
-			} else {
-				return ;
-			}
 			canvasState.addFigure(newFigure);
 			startPoint = null;
 			redrawCanvas();
