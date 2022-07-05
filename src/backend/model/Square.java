@@ -1,12 +1,9 @@
 package backend.model;
 
-public class Square implements Figure {
-
-    private final Point topLeft, bottomRight;
+public class Square extends Rectangle {
 
     public Square(Point topLeft, double size) {
-        this.topLeft = topLeft;
-        this.bottomRight = new Point(topLeft.x + size, topLeft.y + size);
+        super(topLeft,new Point(topLeft.x + size, topLeft.y + size));
     }
 
     public Point getTopLeft() {

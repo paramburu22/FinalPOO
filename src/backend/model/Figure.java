@@ -1,5 +1,9 @@
 package backend.model;
 
-public interface Figure {
+public abstract class Figure {
+
+    abstract double area();
+
+    abstract double perimeter();
 
 }

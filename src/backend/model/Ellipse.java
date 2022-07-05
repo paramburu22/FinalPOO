@@ -1,6 +1,6 @@
 package backend.model;
 
-public class Ellipse implements Figure {
+public class Ellipse extends Figure {
 
     protected final Point centerPoint;
     protected final double sMayorAxis, sMinorAxis;
@@ -9,6 +9,16 @@ public class Ellipse implements Figure {
         this.centerPoint = centerPoint;
         this.sMayorAxis = sMayorAxis;
         this.sMinorAxis = sMinorAxis;
+    }
+
+    @Override
+    public double area() {
+        return Math.PI / 4 * sMayorAxis * sMinorAxis;
+    }
+
+    @Override
+    public double perimeter() {
+        return Math.PI / 2 * (sMayorAxis + sMinorAxis);
     }
 
     @Override
@@ -27,5 +37,5 @@ public class Ellipse implements Figure {
     public double getsMinorAxis() {
         return sMinorAxis;
     }
-
 }
+
