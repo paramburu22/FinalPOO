@@ -2,6 +2,7 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
+import frontend.Buttons.FigureToggleButton;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -50,26 +51,31 @@ public class PaintPane extends BorderPane {
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
-		VBox buttonsBox = new VBox(10);
+		VBox buttonsBox = new VBox(10); //espacio entre boton y boton
 		buttonsBox.getChildren().addAll(toolsArr);
-		buttonsBox.setPadding(new Insets(5));
+		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
 
 		canvas.setOnMousePressed(event -> {
+			//no es lo mismo que un click. Es cuando empieza a mantener apretado.
 			startPoint = new Point(event.getX(), event.getY());
 		});
 
 		canvas.setOnMouseReleased(event -> {
+			//cuando lo suelto
 			Point endPoint = new Point(event.getX(), event.getY());
-			if(startPoint == null) {
-				return ;
-			}
-			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
+			if(startPoint == null || endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
 			Figure newFigure = null;
+			for(FigureToggleButton figureButton : figureButtons){
+				if(figureButton.isSelected())
+					figureButton.build();
+			}
+
+				// if "generalbutton".isselected()
 			if(rectangleButton.isSelected()) {
 				newFigure = new Rectangle(startPoint, endPoint);
 			}
