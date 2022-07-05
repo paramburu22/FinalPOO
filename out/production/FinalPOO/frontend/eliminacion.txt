@@ -17,3 +17,9 @@
 			} else {
 				return ;
 			}
+
+			//			if(figure == selectedFigure) {
+            //				gc.setStroke(Color.RED);
+            //			} else {
+            //				gc.setStroke(lineColor);
+            //			}

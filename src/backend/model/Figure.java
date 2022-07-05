@@ -13,4 +13,12 @@ public abstract class Figure {
         this.lineColor = lineColor;
         this.lineWidth = lineWidth;
     }
+
+    public double getLineWidth() {
+        return lineWidth;
+    }
+
+    public Color getBackGroundColor() {
+        return backGroundColor;
+    }
 }

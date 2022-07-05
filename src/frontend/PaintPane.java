@@ -7,9 +7,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -18,6 +16,9 @@ public class PaintPane extends BorderPane {
 
 	// BackEnd
 	CanvasState canvasState;
+
+	//Magic Numbers
+	private static final double INITIAL_BORDER = 1;
 
 	// Canvas y relacionados
 	Canvas canvas = new Canvas(800, 600);
@@ -33,9 +34,10 @@ public class PaintPane extends BorderPane {
 	FigureToggleButton ellipseButton = new EllipseButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 	FigureToggleButton[] figureButtonsArr = { rectangleButton, circleButton, squareButton, ellipseButton};
-	private static final double INITIAL_BORDER = 1;
-	private double currentborde = 1;
 	Slider slider = new Slider(1, 50, INITIAL_BORDER);
+	ColorPicker colorPicker = new ColorPicker();
+	Label label = new Label("Borde");
+
 	// Dibujar una figura
 	Point startPoint;
 
@@ -60,13 +62,15 @@ public class PaintPane extends BorderPane {
 		buttonsBox.getChildren().addAll(toolsArr);
 		slider.setShowTickMarks(true);
 		slider.setShowTickLabels(true);
-		slider.setMajorTickUnit(0.25f);
-		slider.setBlockIncrement(0.1f);
+		slider.setMajorTickUnit(1.0f);
+		slider.setBlockIncrement(1.0f);
+		buttonsBox.getChildren().add(label);
 		buttonsBox.getChildren().add(slider);
+		buttonsBox.getChildren().add(colorPicker);
 		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
-		gc.setLineWidth(slider.getValue()); // grosor del borde
+		//gc.setLineWidth(slider.getValue()); // grosor del borde
 
 		canvas.setOnMousePressed(event -> {
 			//no es lo mismo que un click. Es cuando empieza a mantener apretado.
@@ -85,7 +89,7 @@ public class PaintPane extends BorderPane {
 			Figure newFigure = null;
 			for(FigureToggleButton figureButton : figureButtonsArr){
 				if(figureButton.isSelected())
-					newFigure = figureButton.make(startPoint, endPoint,lineColor,fillColor,gc.getLineWidth());
+					newFigure = figureButton.make(startPoint, endPoint, lineColor, fillColor, slider.getValue());
 			}
 
 			//una vez creada la figura anteriormente, pasamos a agregarla al back.
@@ -96,6 +100,7 @@ public class PaintPane extends BorderPane {
 
 		//cuando muevo elmouse si tner clickeado nada
 		canvas.setOnMouseMoved(event -> {
+
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
@@ -177,14 +182,15 @@ public class PaintPane extends BorderPane {
 	}
 
 	void redrawCanvas() {
+
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState.figures()) {
-			if(figure == selectedFigure) {
-				gc.setStroke(Color.RED);
-			} else {
-				gc.setStroke(lineColor);
+
+			gc.setStroke(figure == selectedFigure ? Color.RED : lineColor);
+			if(figure!=null) {
+				gc.setLineWidth(figure.getLineWidth());
+				gc.setFill(figure.getBackGroundColor());
 			}
-			gc.setFill(fillColor);
 			if(figure instanceof Rectangle) {
 				Rectangle rectangle = (Rectangle) figure;
 				gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
