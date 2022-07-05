@@ -1,8 +1,9 @@
 package backend.model;
 
+import backend.Interfaces.Drawable;
 import javafx.scene.paint.Color;
 
-public abstract class Figure {
+public abstract class Figure implements Drawable {
 
     private Color lineColor;
     private Color backGroundColor;
@@ -20,5 +21,26 @@ public abstract class Figure {
 
     public Color getBackGroundColor() {
         return backGroundColor;
+    }
+
+    public Color getLineColor() {
+        return lineColor;
+    }
+
+    public void setBackGroundColor(Color backGroundColor) {
+        this.backGroundColor = backGroundColor;
+    }
+
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
+    }
+
+    public void setLineWidth(double lineWidth) {
+        this.lineWidth = lineWidth;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("Figura++");
     }
 }

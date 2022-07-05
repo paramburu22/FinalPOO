@@ -2,7 +2,7 @@ package backend.model;
 
 import javafx.scene.paint.Color;
 
-public class Ellipse extends Figure {
+public abstract class Ellipse extends Figure {
 
     protected final Point centerPoint;
     protected final double sMayorAxis, sMinorAxis;

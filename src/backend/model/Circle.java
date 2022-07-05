@@ -2,7 +2,7 @@ package backend.model;
 
 import javafx.scene.paint.Color;
 
-public class Circle extends Ellipse {
+public abstract class Circle extends Ellipse {
 
     private double radius;
     public Circle(Point centerPoint, double radius, Color lineColor, Color backGroundColor, double lineWidth) {

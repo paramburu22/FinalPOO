@@ -2,7 +2,7 @@ package backend.model;
 
 import javafx.scene.paint.Color;
 
-public class Rectangle extends Figure {
+public abstract class Rectangle extends Figure {
 
     protected final Point topLeft, bottomRight;
 
