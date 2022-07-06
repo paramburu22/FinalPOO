@@ -8,16 +8,28 @@ public abstract class Figure implements Drawable {
     private Color lineColor;
     private Color backGroundColor;
     private double lineWidth;
+    private double size;
 
     Figure(Color lineColor, Color backGroundColor,double lineWidth){
         this.backGroundColor = backGroundColor;
         this.lineColor = lineColor;
         this.lineWidth = lineWidth;
+        this.size = 1;
     }
 
     public double getLineWidth() {
         return lineWidth;
     }
+
+    public double getSize() {
+        return size;
+    }
+
+    public void increase() {
+        this.size += 0.1;
+    }
+
+    public void decrease() { this.size -= 0.1; }
 
     public Color getBackGroundColor() {
         return backGroundColor;

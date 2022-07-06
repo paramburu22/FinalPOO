@@ -17,8 +17,8 @@ public class DrawableCircle extends Circle {
 
     @Override
     public void draw() {
-        double diameter = getRadius() * 2;
-        gc.fillOval(getCenterPoint().getX() - getRadius(), getCenterPoint().getY() - getRadius(), diameter, diameter);
-        gc.strokeOval(getCenterPoint().getX() - getRadius(), getCenterPoint().getY() - getRadius(), diameter, diameter);
+        double diameter = getSize() * getRadius() * 2;
+        gc.fillOval(getCenterPoint().getX() - getRadius() , getCenterPoint().getY() - getRadius(), diameter, diameter);
+        gc.strokeOval(getCenterPoint().getX() - getRadius() , getCenterPoint().getY() - getRadius(),  diameter, diameter);
     }
 }

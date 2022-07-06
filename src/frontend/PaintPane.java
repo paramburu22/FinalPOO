@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.beans.binding.Bindings;
 
 
 
@@ -42,6 +43,8 @@ public class PaintPane extends BorderPane {
 	Slider slider = new Slider(1, 50, INITIAL_BORDER);
 	ColorPicker lineColorPicker = new ColorPicker(LINE_COLOR);
 	ColorPicker fillColorPicker = new ColorPicker(FILL_COLOR);
+	ToggleButton increaseButton = new ToggleButton("Agrandar");
+	ToggleButton decreaseButton = new ToggleButton("Achicar");
 
 	// Dibujar una figura
 	Point startPoint;
@@ -74,10 +77,23 @@ public class PaintPane extends BorderPane {
 		buttonsBox.getChildren().add(lineColorPicker);
 		buttonsBox.getChildren().add(new Label("Relleno"));
 		buttonsBox.getChildren().add(fillColorPicker);
+		buttonsBox.getChildren().add(increaseButton);
+		buttonsBox.getChildren().add(decreaseButton);
 		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
-		//gc.setLineWidth(slider.getValue()); // grosor del borde
+		gc.setLineWidth(slider.getValue()); // grosor del increase
+
+		Label testlabel = new Label("hola");
+		buttonsBox.getChildren().add(testlabel);
+		testlabel.textProperty().bind(
+				Bindings.format(
+						"%.2f",
+						slider.valueProperty()
+				)
+		);
+
+
 
 		canvas.setOnMousePressed(event -> {
 			//no es lo mismo que un click. Es cuando empieza a mantener apretado.
@@ -189,13 +205,18 @@ public class PaintPane extends BorderPane {
 			}
 			redrawCanvas();
 		});
-		
+
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
 			}
+		});
+
+		increaseButton.setOnAction(event->{
+			selectedFigure.increase();
+			redrawCanvas();
 		});
 
 		setLeft(buttonsBox);
