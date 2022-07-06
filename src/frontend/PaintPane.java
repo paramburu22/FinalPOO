@@ -5,14 +5,15 @@ import backend.model.*;
 import frontend.Buttons.*;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.control.Slider;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.beans.binding.Bindings;
 
+import java.awt.event.MouseEvent;
 
 
 public class PaintPane extends BorderPane {
@@ -29,8 +30,6 @@ public class PaintPane extends BorderPane {
 	// Canvas y relacionados
 	Canvas canvas = new Canvas(800, 600);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = LINE_COLOR;
-	Color fillColor = FILL_COLOR;
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
@@ -39,13 +38,12 @@ public class PaintPane extends BorderPane {
 	FigureToggleButton squareButton = new SquareButton("Cuadrado");
 	FigureToggleButton ellipseButton = new EllipseButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
-	FigureToggleButton[] figureButtonsArr = { rectangleButton, circleButton, squareButton, ellipseButton};
 	Slider slider = new Slider(1, 50, INITIAL_BORDER);
 	ColorPicker lineColorPicker = new ColorPicker(LINE_COLOR);
 	ColorPicker fillColorPicker = new ColorPicker(FILL_COLOR);
 	ToggleButton increaseButton = new ToggleButton("Agrandar");
 	ToggleButton decreaseButton = new ToggleButton("Achicar");
-
+	FigureToggleButton[] figureButtonsArr = { rectangleButton, circleButton, squareButton, ellipseButton};
 	// Dibujar una figura
 	Point startPoint;
 
@@ -58,7 +56,9 @@ public class PaintPane extends BorderPane {
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
+
+		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, };
+		Control[] controlsArr = {new Label("Borde"), slider, lineColorPicker, new Label("Relleno"), fillColorPicker, increaseButton, decreaseButton};
 
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
@@ -67,33 +67,27 @@ public class PaintPane extends BorderPane {
 			tool.setCursor(Cursor.HAND);
 		}
 		VBox buttonsBox = new VBox(10); //espacio entre boton y boton
+
+		setsliderprops(slider);
+
 		buttonsBox.getChildren().addAll(toolsArr);
-		slider.setShowTickMarks(true);
-		slider.setShowTickLabels(true);
-		slider.setMajorTickUnit(1.0f);
-		slider.setBlockIncrement(1.0f);
-		buttonsBox.getChildren().add(new Label("Borde"));
-		buttonsBox.getChildren().add(slider);
-		buttonsBox.getChildren().add(lineColorPicker);
-		buttonsBox.getChildren().add(new Label("Relleno"));
-		buttonsBox.getChildren().add(fillColorPicker);
-		buttonsBox.getChildren().add(increaseButton);
-		buttonsBox.getChildren().add(decreaseButton);
+		buttonsBox.getChildren().addAll(controlsArr);
+
 		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(slider.getValue()); // grosor del increase
 
-		Label testlabel = new Label("hola");
-		buttonsBox.getChildren().add(testlabel);
-		testlabel.textProperty().bind(
-				Bindings.format(
-						"%.2f",
-						slider.valueProperty()
-				)
-		);
 
 
+
+		//relaciono el slider del borde con el setlinewidth de la figura seleccionada.
+		slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+				if (selectedFigure !=null ) {
+					selectedFigure.setLineWidth((double) newValue);
+					redrawCanvas();
+				}
+		});
 
 		canvas.setOnMousePressed(event -> {
 			//no es lo mismo que un click. Es cuando empieza a mantener apretado.
@@ -219,6 +213,11 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
+		decreaseButton.setOnAction(event->{
+			selectedFigure.decrease();
+			redrawCanvas();
+		});
+
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
@@ -236,6 +235,12 @@ public class PaintPane extends BorderPane {
 			gc.setFill(figure.getBackGroundColor());
 			figure.draw();
 		}
+	}
+
+	private void setsliderprops(Slider slider) {
+		slider.setShowTickMarks(true);
+		slider.setShowTickLabels(true);
+		slider.setMajorTickUnit(25);
 	}
 
 	boolean figureBelongs(Figure figure, Point eventPoint) {
