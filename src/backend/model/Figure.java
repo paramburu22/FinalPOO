@@ -39,8 +39,4 @@ public abstract class Figure implements Drawable {
         this.lineWidth = lineWidth;
     }
 
-    @Override
-    public String toString(){
-        return String.format("Figura++");
-    }
 }

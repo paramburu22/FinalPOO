@@ -13,9 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 
 public class PaintPane extends BorderPane {
 
@@ -99,16 +96,17 @@ public class PaintPane extends BorderPane {
 			Figure newFigure = null;
 			for(FigureToggleButton figureButton : figureButtonsArr){
 				if(figureButton.isSelected())
-					newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
+					newFigure = figureButton.make(startPoint, endPoint,lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
 			}
 
 			//una vez creada la figura anteriormente, pasamos a agregarla al back.
-			canvasState.addFigure(newFigure);
+			if(newFigure != null)
+				canvasState.addFigure(newFigure);
 			startPoint = null;
 			redrawCanvas();
 		});
 
-		//cuando muevo elmouse si tner clickeado nada
+		//cuando muevo elmouse si tener clickeado nada
 		canvas.setOnMouseMoved(event -> {
 
 			Point eventPoint = new Point(event.getX(), event.getY());
@@ -136,7 +134,6 @@ public class PaintPane extends BorderPane {
 					if(figureBelongs(figure, eventPoint)) {
 						found = true;
 						selectedFigure = figure;
-
 						label.append(figure.toString());
 					}
 				}
@@ -147,14 +144,7 @@ public class PaintPane extends BorderPane {
 					statusPane.updateStatus("Ninguna figura encontrada");
 				}
 				redrawCanvas();
-
 			}
-//				if (selectedFigure != null) {
-//					selectedFigure.setBackGroundColor(fillColorPicker.getValue());
-//					selectedFigure.setLineColor(lineColorPicker.getValue());
-					//redrawCanvas();
-//				}
-
 		});
 
 		canvas.setOnMouseDragged(event -> {
@@ -187,6 +177,19 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		lineColorPicker.setOnMouseClicked(event->{
+			if(selectedFigure != null) {
+				selectedFigure.setLineColor(lineColorPicker.getValue());
+			}
+			redrawCanvas();
+		});
+		fillColorPicker.setOnMouseClicked(event->{
+			if(selectedFigure != null) {
+				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
+			}
+			redrawCanvas();
+		});
+
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				canvasState.deleteFigure(selectedFigure);
@@ -205,13 +208,12 @@ public class PaintPane extends BorderPane {
 		for (Figure figure:canvasState.figures()) {
 			System.out.println(String.format("%s",figure));
 		}
+
 		for(Figure figure : canvasState.figures()) {
-			if(figure != null) {
-				gc.setStroke(figure == selectedFigure ? Color.RED : figure.getLineColor());
-				gc.setLineWidth(figure.getLineWidth());
-				gc.setFill(figure.getBackGroundColor());
-				figure.draw();
-			}
+			gc.setStroke(figure == selectedFigure ? Color.RED : figure.getLineColor());
+			gc.setLineWidth(figure.getLineWidth());
+			gc.setFill(figure.getBackGroundColor());
+			figure.draw();
 		}
 	}
 
