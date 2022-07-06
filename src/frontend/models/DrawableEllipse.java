@@ -15,9 +15,7 @@ public class DrawableEllipse extends Ellipse {
 
     @Override
     public void draw() {
-        double mAxis = getsMayorAxis()*getSize();
-        double miAxis = getsMinorAxis()*getSize();
-        gc.strokeOval(getCenterPoint().getX() - (mAxis / 2), getCenterPoint().getY() - (miAxis / 2), mAxis, miAxis);
-        gc.fillOval(getCenterPoint().getX() - (mAxis / 2), getCenterPoint().getY() - (miAxis / 2), mAxis, miAxis);
+        gc.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
+        gc.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
     }
 }

@@ -5,13 +5,24 @@ import javafx.scene.paint.Color;
 public abstract class Ellipse extends Figure {
 
     protected final Point centerPoint;
-    protected final double sMayorAxis, sMinorAxis;
+    protected double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color lineColor, Color backGroundColor, double lineWidth) {
         super(lineColor,backGroundColor,lineWidth);
         this.centerPoint = centerPoint;
         this.sMayorAxis = sMayorAxis;
         this.sMinorAxis = sMinorAxis;
+    }
+
+    @Override
+    public void increase() {
+        sMayorAxis += (0.1 *sMayorAxis);
+        sMinorAxis += (0.1 *sMinorAxis);
+    }
+    @Override
+    public void decrease() {
+        sMayorAxis -= (0.1 *sMayorAxis);
+        sMinorAxis -= (0.1 *sMinorAxis);
     }
 
 

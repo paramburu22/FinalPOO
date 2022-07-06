@@ -16,12 +16,7 @@ public class DrawableRectangle extends Rectangle {
 
     @Override
     public void draw() {
-        double topLeftX = getSize() * getTopLeft().getX();
-        double bottomRightX = getSize() * getBottomRight().getX();
-        double topLeftY = getSize() * getTopLeft().getY();
-        double bottomRightY = getSize() * getBottomRight().getY();
-
-        gc.fillRect(topLeftX, topLeftY, Math.abs(topLeftX - bottomRightX), Math.abs(topLeftY - bottomRightY));
-        gc.strokeRect(topLeftX, topLeftY, Math.abs(topLeftX - bottomRightX), Math.abs(topLeftY - bottomRightY));
+        gc.fillRect(getTopLeft().getX(), getTopLeft().getY(), Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
+        gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(), Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
     }
 }

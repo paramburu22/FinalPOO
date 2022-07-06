@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public abstract class Rectangle extends Figure {
 
-    protected final Point topLeft, bottomRight;
+    protected Point topLeft, bottomRight;
 
     public Rectangle(Point topLeft, Point bottomRight, Color lineColor, Color backGroundColor, double lineWidth) {
         super(lineColor,backGroundColor,lineWidth);
@@ -12,12 +12,19 @@ public abstract class Rectangle extends Figure {
         this.bottomRight = bottomRight;
     }
 
-    public double base() {
-        return Math.abs(topLeft.getX() - bottomRight.getX());
+    @Override
+    public void increase() {
+        topLeft.setX(topLeft.getX() - 0.1* topLeft.getX());
+        topLeft.setY(topLeft.getY() - 0.1* topLeft.getY());
+        bottomRight.setX(bottomRight.getX() + 0.1* bottomRight.getX());
+        bottomRight.setY(bottomRight.getY() + 0.1* bottomRight.getY());
     }
-
-    public double height() {
-        return Math.abs(topLeft.getY() - bottomRight.getY());
+    @Override
+    public void decrease() {
+        topLeft.setX(topLeft.getX() + 0.1* topLeft.getX());
+        topLeft.setY(topLeft.getY() + 0.1* topLeft.getY());
+        bottomRight.setX(bottomRight.getX() - 0.1* bottomRight.getX());
+        bottomRight.setY(bottomRight.getY() - 0.1* bottomRight.getY());
     }
 
 

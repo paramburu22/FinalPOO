@@ -23,5 +23,13 @@ public abstract class Circle extends Ellipse {
     public double getRadius() {
         return radius;
     }
+    @Override
+    public void increase() {
+        radius += (0.1 *radius);
+    }
+    @Override
+    public void decrease() {
+        radius -= (0.1*radius);
+    }
 }
 
