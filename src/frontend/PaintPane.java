@@ -177,19 +177,19 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		lineColorPicker.setOnMouseClicked(event->{
+		lineColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
 				selectedFigure.setLineColor(lineColorPicker.getValue());
 			}
 			redrawCanvas();
 		});
-		fillColorPicker.setOnMouseClicked(event->{
+		fillColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
 				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
 			}
 			redrawCanvas();
 		});
-
+		
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				canvasState.deleteFigure(selectedFigure);
