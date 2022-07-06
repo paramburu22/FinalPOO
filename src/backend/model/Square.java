@@ -21,4 +21,9 @@ public abstract class Square extends Rectangle {
         return String.format("Cuadrado [ %s , %s ]", topLeft, bottomRight);
     }
 
+    @Override
+    public boolean containsOn(Point point){
+        return point.getX() > getTopLeft().getX() && point.getX() < getBottomRight().getX() &&
+                point.getY() > getTopLeft().getY() && point.getY() < getBottomRight().getY();
+    }
 }

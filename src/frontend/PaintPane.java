@@ -59,27 +59,11 @@ public class PaintPane extends BorderPane {
 
 		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton,increaseButton, decreaseButton};
 		Control[] controlsArr = {new Label("Borde"), slider, lineColorPicker, new Label("Relleno"), fillColorPicker};
-
 		ToggleGroup tools = new ToggleGroup();
-		for (ToggleButton tool : toolsArr) {
-			tool.setMinWidth(90);
-			tool.setToggleGroup(tools);
-			tool.setCursor(Cursor.HAND);
-		}
-		VBox buttonsBox = new VBox(10); //espacio entre boton y boton
 
-		setsliderprops(slider);
-
-		buttonsBox.getChildren().addAll(toolsArr);
-		buttonsBox.getChildren().addAll(controlsArr);
-
-		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
-		buttonsBox.setStyle("-fx-background-color: #999");
-		buttonsBox.setPrefWidth(100);
-		gc.setLineWidth(slider.getValue()); // grosor del increase
-
-
-
+		setButtonsProps(toolsArr,tools);
+		setSliderProps(slider);
+		VBox buttonsBox = setButtonsBox(toolsArr,controlsArr);
 
 		//relaciono el slider del borde con el setlinewidth de la figura seleccionada.
 		slider.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -116,43 +100,19 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//cuando muevo elmouse si tener clickeado nada
+		//cuando muevo el mouse si tener clickeado nada
 		canvas.setOnMouseMoved(event -> {
-
 			Point eventPoint = new Point(event.getX(), event.getY());
-			boolean found = false;
-			StringBuilder label = new StringBuilder();
-			for(Figure figure : canvasState.figures()) {
-				if(figureBelongs(figure, eventPoint)) {
-					found = true;
-					label.append(figure.toString());
-				}
-			}
-			if(found) {
-				statusPane.updateStatus(label.toString());
-			} else {
-				statusPane.updateStatus(eventPoint.toString());
-			}
+			if (selectedFigure == null)
+				figureBelongs(eventPoint);
 		});
 
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
-				boolean found = false;
-				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for (Figure figure : canvasState.figures()) {
-					if(figureBelongs(figure, eventPoint)) {
-						found = true;
-						selectedFigure = figure;
-						label.append(figure.toString());
-					}
-				}
-				if (found) {
-					statusPane.updateStatus(label.toString());
-				} else {
-					selectedFigure = null;
+				selectedFigure = figureBelongs(eventPoint);
+				if(selectedFigure == null)
 					statusPane.updateStatus("Ninguna figura encontrada");
-				}
 				redrawCanvas();
 			}
 		});
@@ -237,33 +197,47 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	private void setsliderprops(Slider slider) {
+	private VBox setButtonsBox(ToggleButton[] toolsArr, Control[] controlsArr){
+		VBox buttonsBox = new VBox(10);
+		buttonsBox.getChildren().addAll(toolsArr);
+		buttonsBox.getChildren().addAll(controlsArr);
+		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
+		buttonsBox.setStyle("-fx-background-color: #999");
+		buttonsBox.setPrefWidth(100);
+		return buttonsBox;
+	}
+
+	private void setButtonsProps(ToggleButton[] toolsArr, ToggleGroup tools){
+		for (ToggleButton tool : toolsArr) {
+			tool.setMinWidth(90);
+			tool.setToggleGroup(tools);
+			tool.setCursor(Cursor.HAND);
+		}
+	}
+
+	private void setSliderProps(Slider slider) {
 		slider.setShowTickMarks(true);
 		slider.setShowTickLabels(true);
 		slider.setMajorTickUnit(25);
 	}
 
-	boolean figureBelongs(Figure figure, Point eventPoint) {
+	Figure figureBelongs(Point eventPoint) {
+		Figure toReturn = null;
 		boolean found = false;
-		if(figure instanceof Rectangle) {
-			Rectangle rectangle = (Rectangle) figure;
-			found = eventPoint.getX() > rectangle.getTopLeft().getX() && eventPoint.getX() < rectangle.getBottomRight().getX() &&
-					eventPoint.getY() > rectangle.getTopLeft().getY() && eventPoint.getY() < rectangle.getBottomRight().getY();
-		} else if(figure instanceof Circle) {
-			Circle circle = (Circle) figure;
-			found = Math.sqrt(Math.pow(circle.getCenterPoint().getX() - eventPoint.getX(), 2) +
-					Math.pow(circle.getCenterPoint().getY() - eventPoint.getY(), 2)) < circle.getRadius();
-		} else if(figure instanceof Square) {
-			Square square = (Square) figure;
-			found = eventPoint.getX() > square.getTopLeft().getX() && eventPoint.getX() < square.getBottomRight().getX() &&
-					eventPoint.getY() > square.getTopLeft().getY() && eventPoint.getY() < square.getBottomRight().getY();
-		} else if(figure instanceof Ellipse) {
-			Ellipse ellipse = (Ellipse) figure;
-			// Nota: Fórmula aproximada. No es necesario corregirla.
-			found = ((Math.pow(eventPoint.getX() - ellipse.getCenterPoint().getX(), 2) / Math.pow(ellipse.getsMayorAxis(), 2)) +
-					(Math.pow(eventPoint.getY() - ellipse.getCenterPoint().getY(), 2) / Math.pow(ellipse.getsMinorAxis(), 2))) <= 0.30;
+		StringBuilder label = new StringBuilder();
+		for(Figure figure : canvasState.figures()) {
+			if(figure.containsOn(eventPoint)) {
+				found = true;
+				toReturn = figure;
+				label.append(figure.toString());
+			}
 		}
-		return found;
+		if (found) {
+			statusPane.updateStatus(label.toString());
+		} else {
+			statusPane.updateStatus(eventPoint.toString());
+		}
+		return toReturn;
 	}
 
 }

@@ -31,6 +31,12 @@ public abstract class Ellipse extends Figure {
         return String.format("Elipse [Centro: %s, DMayor: %.2f, DMenor: %.2f]", centerPoint, sMayorAxis, sMinorAxis);
     }
 
+    @Override
+    public boolean containsOn(Point point){
+        return ((Math.pow(point.getX() - getCenterPoint().getX(), 2) / Math.pow(getsMayorAxis(), 2)) +
+                (Math.pow(point.getY() -getCenterPoint().getY(), 2) / Math.pow(getsMinorAxis(), 2))) <= 0.30;
+    }
+
     public Point getCenterPoint() {
         return centerPoint;
     }

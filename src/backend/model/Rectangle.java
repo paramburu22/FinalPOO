@@ -27,6 +27,11 @@ public abstract class Rectangle extends Figure {
         bottomRight.setY(bottomRight.getY() - 0.1* bottomRight.getY());
     }
 
+    @Override
+    public boolean containsOn(Point point){
+        return point.getX() > getTopLeft().getX() && point.getX() < getBottomRight().getX() &&
+                point.getY() > getTopLeft().getY() && point.getY() < getBottomRight().getY();
+    }
 
     @Override
     public String toString() {

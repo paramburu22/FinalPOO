@@ -2,9 +2,10 @@ package backend.model;
 
 import backend.Interfaces.Drawable;
 import backend.Interfaces.Modificable;
+import backend.Interfaces.Selectable;
 import javafx.scene.paint.Color;
 
-public abstract class Figure implements Drawable, Modificable {
+public abstract class Figure implements Drawable, Modificable, Selectable {
 
     private Color lineColor;
     private Color backGroundColor;

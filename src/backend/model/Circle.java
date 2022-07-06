@@ -31,5 +31,11 @@ public abstract class Circle extends Ellipse {
     public void decrease() {
         radius -= (0.1*radius);
     }
+
+    @Override
+    public boolean containsOn(Point point){
+        return Math.sqrt(Math.pow(getCenterPoint().getX() - point.getX(), 2) +
+                Math.pow(getCenterPoint().getY() - point.getY(), 2)) < getRadius();
+    }
 }
 
