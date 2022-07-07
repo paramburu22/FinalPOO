@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public abstract class Ellipse extends Figure {
 
-    protected final Point centerPoint;
+    protected Point centerPoint;
     protected double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color lineColor, Color backGroundColor, double lineWidth) {
@@ -47,6 +47,12 @@ public abstract class Ellipse extends Figure {
 
     public double getsMinorAxis() {
         return sMinorAxis;
+    }
+
+    @Override
+    public void move(double diffX, double diffY){
+        getCenterPoint().x += diffX;
+        getCenterPoint().y += diffY;
     }
 }
 

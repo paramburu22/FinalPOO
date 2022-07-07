@@ -14,17 +14,21 @@ public abstract class Rectangle extends Figure {
 
     @Override
     public void increase() {
-        topLeft.setX(topLeft.getX() - 0.1* topLeft.getX());
-        topLeft.setY(topLeft.getY() - 0.1* topLeft.getY());
-        bottomRight.setX(bottomRight.getX() + 0.1* bottomRight.getX());
-        bottomRight.setY(bottomRight.getY() + 0.1* bottomRight.getY());
+        double xDiff = (topLeft.getX() - bottomRight.getX()) * 0.1;
+        double yDiff = (topLeft.getY() - bottomRight.getY()) * 0.1;
+        topLeft.setX(topLeft.getX() + xDiff);
+        topLeft.setY(topLeft.getY() + yDiff);
+        bottomRight.setX(bottomRight.getX() - xDiff);
+        bottomRight.setY(bottomRight.getY() - yDiff);
     }
     @Override
     public void decrease() {
-        topLeft.setX(topLeft.getX() + 0.1* topLeft.getX());
-        topLeft.setY(topLeft.getY() + 0.1* topLeft.getY());
-        bottomRight.setX(bottomRight.getX() - 0.1* bottomRight.getX());
-        bottomRight.setY(bottomRight.getY() - 0.1* bottomRight.getY());
+        double xDiff = (topLeft.getX() - bottomRight.getX()) * 0.1;
+        double yDiff = (topLeft.getY() - bottomRight.getY()) * 0.1;
+        topLeft.setX(topLeft.getX() - xDiff);
+        topLeft.setY(topLeft.getY() - yDiff);
+        bottomRight.setX(bottomRight.getX() + xDiff);
+        bottomRight.setY(bottomRight.getY() + yDiff);
     }
 
     @Override
@@ -45,6 +49,13 @@ public abstract class Rectangle extends Figure {
         return bottomRight;
     }
 
+    @Override
+    public void move(double diffX, double diffY){
+        getTopLeft().x += diffX;
+        getBottomRight().x += diffX;
+        getTopLeft().y += diffY;
+        getBottomRight().y += diffY;
+    }
 
 }
 

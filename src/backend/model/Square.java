@@ -26,4 +26,11 @@ public abstract class Square extends Rectangle {
         return point.getX() > getTopLeft().getX() && point.getX() < getBottomRight().getX() &&
                 point.getY() > getTopLeft().getY() && point.getY() < getBottomRight().getY();
     }
+    /*@Override
+    public void move(double diffX, double diffY){
+        getTopLeft().x += diffX;
+        getBottomRight().x += diffX;
+        getTopLeft().y += diffY;
+        getBottomRight().y += diffY;
+    }*/
 }

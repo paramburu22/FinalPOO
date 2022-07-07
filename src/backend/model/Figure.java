@@ -2,10 +2,11 @@ package backend.model;
 
 import backend.Interfaces.Drawable;
 import backend.Interfaces.Modificable;
+import backend.Interfaces.Movable;
 import backend.Interfaces.Selectable;
 import javafx.scene.paint.Color;
 
-public abstract class Figure implements Drawable, Modificable, Selectable {
+public abstract class Figure implements Drawable, Modificable, Selectable, Movable {
 
     private Color lineColor;
     private Color backGroundColor;
@@ -20,10 +21,6 @@ public abstract class Figure implements Drawable, Modificable, Selectable {
     public double getLineWidth() {
         return lineWidth;
     }
-
-   /* public double getSize() {
-        return size;
-    }*/
 
 
     public Color getBackGroundColor() {
