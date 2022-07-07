@@ -102,15 +102,13 @@ public class PaintPane extends BorderPane {
 
 		//cuando muevo el mouse si tener clickeado nada
 		canvas.setOnMouseMoved(event -> {
-			Point eventPoint = new Point(event.getX(), event.getY());
 			if (selectedFigure == null)
-				figureBelongs(eventPoint);
+				figureStatus(new Point(event.getX(), event.getY()), new StringBuilder());
 		});
 
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				selectedFigure = figureBelongs(eventPoint);
+				selectedFigure = figureStatus(new Point(event.getX(), event.getY()), new StringBuilder("Se selecciono: "));
 				if(selectedFigure == null)
 					statusPane.updateStatus("Ninguna figura encontrada");
 				redrawCanvas();
@@ -220,24 +218,16 @@ public class PaintPane extends BorderPane {
 		slider.setShowTickLabels(true);
 		slider.setMajorTickUnit(25);
 	}
-
-	Figure figureBelongs(Point eventPoint) {
-		Figure toReturn = null;
-		boolean found = false;
-		StringBuilder label = new StringBuilder();
+	Figure figureStatus(Point eventPoint, StringBuilder label) {
 		for(Figure figure : canvasState.figures()) {
 			if(figure.containsOn(eventPoint)) {
-				found = true;
-				toReturn = figure;
-				label.append(figure.toString());
+				label.append(figure);
+				statusPane.updateStatus(label.toString());
+				return figure;
 			}
 		}
-		if (found) {
-			statusPane.updateStatus(label.toString());
-		} else {
-			statusPane.updateStatus(eventPoint.toString());
-		}
-		return toReturn;
+		statusPane.updateStatus(eventPoint.toString());
+		return null;
 	}
 
 }
