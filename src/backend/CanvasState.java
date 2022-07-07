@@ -1,5 +1,7 @@
 package backend;
 
+import backend.Action.ActionType;
+import backend.Action.PaintAction;
 import backend.model.Figure;
 
 import java.util.ArrayList;
@@ -16,10 +18,22 @@ public class CanvasState {
         return selectedFigure;
     }*/
 
+    private final List<PaintAction> unDo = new ArrayList<>();
+
+    private final List<PaintAction> reDo = new ArrayList<>();
+
     private final List<Figure> list = new ArrayList<>();
 
     public void addFigure(Figure figure) {
         list.add(figure);
+    }
+
+    public void toUndo(ActionType actionType,Figure figure) {
+        unDo.add(new PaintAction(actionType,figure));
+    }
+
+    public void toRedo(ActionType actionType,Figure figure) {
+        reDo.add(new PaintAction(actionType,figure));
     }
 
     public void deleteFigure(Figure figure) {
