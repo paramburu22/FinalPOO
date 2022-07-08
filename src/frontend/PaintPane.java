@@ -78,9 +78,11 @@ public class PaintPane extends BorderPane {
 		setSliderProps(slider);
 		VBox buttonsBox = setButtonsBox(toolsArr,controlsArr);
 		HBox topButtonsBox = new HBox(10);
-		topButtonsBox.getChildren().add(new Label("Cantidad de operaciones: "));
+		Label undoLabel = new Label("0");
+		Label redoLabel = new Label("0");
+		topButtonsBox.getChildren().add(undoLabel);
 		topButtonsBox.getChildren().addAll(topToolsArr);
-		topButtonsBox.getChildren().add(new Label("Cantidad de operaciones: "));
+		topButtonsBox.getChildren().add(redoLabel);
 		topButtonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
 		topButtonsBox.setStyle("-fx-background-color: #999");
 		topButtonsBox.setPrefHeight(25);
@@ -94,11 +96,13 @@ public class PaintPane extends BorderPane {
 				}
 		});
 
+		// creacion del punto de inicio donde a continuacion creara la figura
 		canvas.setOnMousePressed(event -> {
 			//no es lo mismo que un click. Es cuando empieza a mantener apretado.
 			startPoint = new Point(event.getX(), event.getY());
 		});
 
+		//creacion de figura
 		canvas.setOnMouseReleased(event -> {
 			//cuando lo suelto
 			Point endPoint = new Point(event.getX(), event.getY());
@@ -126,6 +130,7 @@ public class PaintPane extends BorderPane {
 				figureStatus(new Point(event.getX(), event.getY()), new StringBuilder());
 		});
 
+		//Seleccion de figura
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				selectedFigure = figureStatus(new Point(event.getX(), event.getY()), new StringBuilder("Se selecciono: "));
@@ -135,6 +140,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		//mover la figura
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
@@ -145,40 +151,55 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		//cambiar el color del borde
 		lineColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
 				selectedFigure.setLineColor(lineColorPicker.getValue());
-			}
-			redrawCanvas();
-		});
-		fillColorPicker.setOnAction(event->{
-			if(selectedFigure != null) {
-				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
+				canvasState.toUndo(ActionType.LINECOLOR, selectedFigure);
 			}
 			redrawCanvas();
 		});
 
+		//cambiar el color del relleno
+		fillColorPicker.setOnAction(event->{
+			if(selectedFigure != null) {
+				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
+				canvasState.toUndo(ActionType.FILLCOLOR, selectedFigure);
+			}
+			redrawCanvas();
+		});
+
+		//borrar la figura
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				canvasState.deleteFigure(selectedFigure);
-				canvasState.toUndo(ActionType.DRAW, selectedFigure);
+				canvasState.toUndo(ActionType.DELETE, selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
 			}
 		});
 
+		// incrementa 10% las dimensiones de la figura
 		increaseButton.setOnAction(event->{
-			selectedFigure.increase();
-			redrawCanvas();
+			if(selectedFigure != null) {
+				selectedFigure.increase();
+				canvasState.toUndo(ActionType.INCREASE, selectedFigure);
+				redrawCanvas();
+			}
+		});
+		// decrementa 10% las dimensiones de la figura
+		decreaseButton.setOnAction(event-> {
+			if(selectedFigure != null) {
+				selectedFigure.decrease();
+				canvasState.toUndo(ActionType.DECREASE, selectedFigure);
+				redrawCanvas();
+			}
 		});
 
-		decreaseButton.setOnAction(event->{
-			selectedFigure.decrease();
-			redrawCanvas();
-		});
-
+		// realiza el undo dependiendo la accion correspondiente
 		undoButton.setOnAction(event ->{
 			canvasState.getLastAction().undo();
+			undoLabel.setText(String.format("%s",canvasState.getUnDoSize() != 0 ?canvasState.getLastAction():"0"));
 			redrawCanvas();
 		});
 

@@ -15,6 +15,10 @@ public abstract class Circle extends Ellipse {
         return String.format("Círculo [Centro: %s , Radio: %.2f}]", centerPoint, radius);
     }
 
+    @Override
+    public String getFigureName(){
+        return "Círculo";
+    }
 
     public Point getCenterPoint() {
         return centerPoint;

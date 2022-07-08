@@ -43,4 +43,6 @@ public abstract class Figure implements Drawable, Modificable, Selectable, Movab
         this.lineWidth = lineWidth;
     }
 
+    public abstract String getFigureName();
+
 }

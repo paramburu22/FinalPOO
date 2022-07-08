@@ -56,6 +56,10 @@ public class CanvasState {
         return unDo.getLast();
     }
 
+    public int getUnDoSize(){
+        return unDo.size();
+    }
+
     public Iterable<Figure> figures() {
         return new ArrayList<>(list);
     }

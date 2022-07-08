@@ -17,7 +17,6 @@ public enum ActionType {
     },LINECOLOR("Cambiar color de borde de "){
         @Override
         public void undo(CanvasState canvasState){
-            return;
         }
     }
     ,FILLCOLOR("Cambiar color de relleno de "){

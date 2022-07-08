@@ -50,6 +50,11 @@ public abstract class Ellipse extends Figure {
     }
 
     @Override
+    public String getFigureName(){
+        return "Elipse";
+    }
+
+    @Override
     public void move(double diffX, double diffY){
         getCenterPoint().x += diffX;
         getCenterPoint().y += diffY;

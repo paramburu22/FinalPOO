@@ -23,4 +23,9 @@ public class PaintAction {
     public Figure getFigure() {
         return figure;
     }
+
+    @Override
+    public String toString(){
+        return String.format("%s %s",action,figure.getFigureName());
+    }
 }

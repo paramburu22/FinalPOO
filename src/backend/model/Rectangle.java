@@ -50,6 +50,11 @@ public abstract class Rectangle extends Figure {
     }
 
     @Override
+    public String getFigureName(){
+        return "Rectangulo";
+    }
+
+    @Override
     public void move(double diffX, double diffY){
         getTopLeft().x += diffX;
         getBottomRight().x += diffX;
