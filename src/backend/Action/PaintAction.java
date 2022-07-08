@@ -16,11 +16,11 @@ public class PaintAction {
 
     public void undo(){
         action.undo(canvas);
-        canvas.toRedo(action,figure);
+        //canvas.toRedo(action, canvas.getListFigure(0));
         canvas.deleteUndoAction();
     }
 
-    public Figure getFigure() {
+    public Figure getUndoFigure() {
         return figure;
     }
 

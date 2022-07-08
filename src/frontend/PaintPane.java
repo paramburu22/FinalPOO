@@ -148,8 +148,8 @@ public class PaintPane extends BorderPane {
 		//cambiar el color del borde
 		lineColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				selectedFigure.setLineColor(lineColorPicker.getValue());
 				canvasState.toUndo(ActionType.LINECOLOR, selectedFigure);
+				selectedFigure.setLineColor(lineColorPicker.getValue());
 			}
 			redrawCanvas();
 		});
@@ -157,8 +157,8 @@ public class PaintPane extends BorderPane {
 		//cambiar el color del relleno
 		fillColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
 				canvasState.toUndo(ActionType.FILLCOLOR, selectedFigure);
+				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
 			}
 			redrawCanvas();
 		});

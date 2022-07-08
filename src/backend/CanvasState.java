@@ -39,17 +39,25 @@ public class CanvasState {
         list.remove(figure);
     }
 
-    public void deleteUndoAction() {
-        unDo.removeLast();
+    public PaintAction deleteUndoAction() {
+        return unDo.removeLast();
     }
 
     public void redrawFigure() {
-        addFigure(unDo.getLast().getFigure());
+        addFigure(unDo.getLast().getUndoFigure());
     }
 
     public void deleteLastFigure(){
         if(list.size()!=0)
-            deleteFigure(unDo.getLast().getFigure());
+            deleteFigure(unDo.getLast().getUndoFigure());
+    }
+
+    public Figure getListFigure(int index) {
+        return list.get(index);
+    }
+
+    public int getFigureIndex(Figure figure) {
+        return list.indexOf(figure);
     }
 
     public PaintAction getLastAction(){
