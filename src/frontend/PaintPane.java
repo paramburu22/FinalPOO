@@ -1,6 +1,6 @@
 package frontend;
 
-import backend.Action.ActionType;
+//import backend.Action.ActionType;
 import backend.CanvasState;
 import backend.model.*;
 import frontend.Buttons.*;
@@ -116,7 +116,7 @@ public class PaintPane extends BorderPane {
 			//una vez creada la figura anteriormente, pasamos a agregarla al back.
 			if(newFigure != null) {
 				canvasState.addFigure(newFigure);
-				canvasState.toUndo(ActionType.DRAW, newFigure);
+				//canvasState.toUndo(ActionType.DRAW, newFigure);
 			}
 			startPoint = null;
 			redrawCanvas();
