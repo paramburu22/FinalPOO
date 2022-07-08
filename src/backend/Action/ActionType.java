@@ -1,44 +1,9 @@
 package backend.Action;
 
-import backend.CanvasState;
 
 public enum ActionType {
-    DRAW("Dibujar "){
-        @Override
-        public void undo(CanvasState canvasState){
-            canvasState.deleteLastFigure();
-        }
-    },DELETE("Borrar "){
-        @Override
-        public void undo(CanvasState canvasState){
-            System.out.println("REAGREGANDO");
-            canvasState.redrawFigure();
-        }
-    },LINECOLOR("Cambiar color de borde de "){
-        @Override
-        public void undo(CanvasState canvasState){
-            System.out.println("BORRO ULTIMA FIGURA");
-            canvasState.deleteLastFigure();
-            System.out.println("AGREGO FIGURA MODIFICADA");
-            canvasState.redrawFigure();
-        }
-    }
-    ,FILLCOLOR("Cambiar color de relleno de "){
-        @Override
-        public void undo(CanvasState canvasState){
-            return;
-        }
-    },INCREASE("Agrandar "){
-        @Override
-        public void undo(CanvasState canvasState){
-            return;
-        }
-    },DECREASE("Achicar "){
-        @Override
-        public void undo(CanvasState canvasState){
-            return;
-        }
-    };
+    DRAW("Dibujar "),DELETE("Borrar "),LINECOLOR("Cambiar color de borde de ")
+    ,FILLCOLOR("Cambiar color de relleno de "),INCREASE("Agrandar "),DECREASE("Achicar ");
 
     private final String message;
 
@@ -50,8 +15,5 @@ public enum ActionType {
     public String toString() {
         return message;
     }
-
-    public abstract void undo(CanvasState canvasState);
-
 
 }

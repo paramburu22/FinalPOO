@@ -1,6 +1,7 @@
 package frontend.models;
 
 import backend.model.Circle;
+import backend.model.Figure;
 import backend.model.Point;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -21,4 +22,10 @@ public class DrawableCircle extends Circle {
         gc.fillOval(getCenterPoint().getX() - getRadius(), getCenterPoint().getY() - getRadius(), diameter, diameter);
         gc.strokeOval(getCenterPoint().getX() - getRadius() , getCenterPoint().getY() - getRadius(),  diameter, diameter);
     }
+
+    @Override
+    public Figure copy() {
+        return this;
+    }
+
 }

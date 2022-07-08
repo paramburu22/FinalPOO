@@ -41,10 +41,6 @@ public abstract class Circle extends Ellipse {
         return Math.sqrt(Math.pow(getCenterPoint().getX() - point.getX(), 2) +
                 Math.pow(getCenterPoint().getY() - point.getY(), 2)) < getRadius();
     }
-    /*@Override
-    public void move(double diffX, double diffY){
-        getCenterPoint().x += diffX;
-        getCenterPoint().y += diffY;
-    }*/
+
 }
 

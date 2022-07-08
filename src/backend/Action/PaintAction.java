@@ -15,7 +15,11 @@ public class PaintAction {
     }
 
     public void undo(){
-        action.undo(canvas);
+        if(action != ActionType.DELETE)
+            canvas.deleteLastFigure();
+        if(action != ActionType.DRAW)
+            canvas.redrawFigure();
+        //action.undo(canvas);
         //canvas.toRedo(action, canvas.getListFigure(0));
         canvas.deleteUndoAction();
     }

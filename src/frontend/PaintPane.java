@@ -163,7 +163,8 @@ public class PaintPane extends BorderPane {
 		//cambiar el color del relleno
 		fillColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				canvasState.toUndo(ActionType.FILLCOLOR, selectedFigure);
+				Figure undoFigure = selectedFigure.make();
+				canvasState.toUndo(ActionType.FILLCOLOR, undoFigure);
 				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
 			}
 			redrawCanvas();
