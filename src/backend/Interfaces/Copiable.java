@@ -2,6 +2,6 @@ package backend.Interfaces;
 
 import backend.model.Figure;
 
-public interface Copiable {
-    Figure copy(Color lineColor, Color backGroundColor,double lineWidth);
+public interface Copiable<T extends Figure> {
+    //T copy(T figure);
 }

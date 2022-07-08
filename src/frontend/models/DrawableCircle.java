@@ -23,9 +23,13 @@ public class DrawableCircle extends Circle {
         gc.strokeOval(getCenterPoint().getX() - getRadius() , getCenterPoint().getY() - getRadius(),  diameter, diameter);
     }
 
-    @Override
-    public Figure copy() {
-        return this;
+    public GraphicsContext getGc() {
+        return gc;
     }
 
+
+    @Override
+    public DrawableCircle copy(DrawableCircle figure) {
+        return new DrawableCircle(figure.get);
+    }
 }
