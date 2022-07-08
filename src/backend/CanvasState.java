@@ -4,8 +4,7 @@ import backend.Action.ActionType;
 import backend.Action.PaintAction;
 import backend.model.Figure;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CanvasState {
 
@@ -18,7 +17,7 @@ public class CanvasState {
         return selectedFigure;
     }*/
 
-    private final List<PaintAction> unDo = new ArrayList<>();
+    private final Deque<PaintAction> unDo = new LinkedList<>();
 
     private final List<PaintAction> reDo = new ArrayList<>();
 

@@ -9,4 +9,9 @@ public class PaintAction {
         this.action = action;
         this.figure = figure;
     }
+
+    public void undo(){
+        action.undo();
+    }
+
 }
