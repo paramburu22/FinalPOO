@@ -17,6 +17,10 @@ public enum ActionType {
     },LINECOLOR("Cambiar color de borde de "){
         @Override
         public void undo(CanvasState canvasState){
+            System.out.println("BORRO ULTIMA FIGURA");
+            canvasState.deleteLastFigure();
+            System.out.println("AGREGO FIGURA MODIFICADA");
+            canvasState.redrawFigure();
         }
     }
     ,FILLCOLOR("Cambiar color de relleno de "){
