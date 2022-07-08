@@ -1,6 +1,7 @@
 package frontend;
 
 //import backend.Action.ActionType;
+import backend.Action.ActionType;
 import backend.CanvasState;
 import backend.model.*;
 import frontend.Buttons.*;
@@ -107,17 +108,14 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 			//cuando suelto el mouse se crea la figura.
-			Figure newFigure = null;
 			for(FigureToggleButton figureButton : figureButtonsArr){
-				if(figureButton.isSelected())
-					newFigure = figureButton.make(startPoint, endPoint,lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
+				if(figureButton.isSelected()) {
+					Figure newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
+					canvasState.addFigure(newFigure);
+					canvasState.toUndo(ActionType.DRAW, newFigure);
+				}
 			}
 
-			//una vez creada la figura anteriormente, pasamos a agregarla al back.
-			if(newFigure != null) {
-				canvasState.addFigure(newFigure);
-				//canvasState.toUndo(ActionType.DRAW, newFigure);
-			}
 			startPoint = null;
 			redrawCanvas();
 		});
@@ -163,6 +161,7 @@ public class PaintPane extends BorderPane {
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				canvasState.deleteFigure(selectedFigure);
+				canvasState.toUndo(ActionType.DRAW, selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
 			}
@@ -175,6 +174,11 @@ public class PaintPane extends BorderPane {
 
 		decreaseButton.setOnAction(event->{
 			selectedFigure.decrease();
+			redrawCanvas();
+		});
+
+		undoButton.setOnAction(event ->{
+			canvasState.getLastAction().undo();
 			redrawCanvas();
 		});
 

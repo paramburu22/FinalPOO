@@ -28,15 +28,32 @@ public class CanvasState {
     }
 
     public void toUndo(ActionType actionType,Figure figure) {
-        unDo.add(new PaintAction(actionType,figure));
+        unDo.add(new PaintAction(actionType,figure, this));
     }
 
     public void toRedo(ActionType actionType,Figure figure) {
-        reDo.add(new PaintAction(actionType,figure));
+        reDo.add(new PaintAction(actionType,figure, this));
     }
 
     public void deleteFigure(Figure figure) {
         list.remove(figure);
+    }
+
+    public void deleteUndoAction() {
+        unDo.removeLast();
+    }
+
+    public void redrawFigure() {
+        addFigure(unDo.getLast().getFigure());
+    }
+
+    public void deleteLastFigure(){
+        if(list.size()!=0)
+            deleteFigure(unDo.getLast().getFigure());
+    }
+
+    public PaintAction getLastAction(){
+        return unDo.getLast();
     }
 
     public Iterable<Figure> figures() {
