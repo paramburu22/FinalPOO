@@ -49,7 +49,14 @@ public class PaintPane extends BorderPane {
 	ToggleButton decreaseButton = new ToggleButton("Achicar");
 	ToggleButton undoButton = new ToggleButton("Deshacer");
 	ToggleButton redo = new ToggleButton("Rehacer");
+	Label undoLabel = new Label("0");
+	Label redoLabel = new Label("0");
 	FigureToggleButton[] figureButtonsArr = { rectangleButton, circleButton, squareButton, ellipseButton};
+	ToggleButton[] listOfButtons = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton,increaseButton, decreaseButton, undoButton,redo};
+	ColorPicker[] listOfColorPickers = {lineColorPicker, fillColorPicker};
+	Control[] leftControls = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, new Label("Borde"), slider, lineColorPicker, new Label("Relleno"), fillColorPicker,increaseButton, decreaseButton};
+	Control[] topControls = {undoLabel, undoButton,redo, redoLabel};
+
 	// Dibujar una figura
 	Point startPoint;
 
@@ -63,32 +70,19 @@ public class PaintPane extends BorderPane {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
 
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton,increaseButton, decreaseButton};
-		ToggleButton[] topToolsArr = { undoButton,redo};
-		Control[] controlsArr = {new Label("Borde"), slider, lineColorPicker, new Label("Relleno"), fillColorPicker};
 		ToggleGroup tools = new ToggleGroup();
 
-		for (ToggleButton tool : topToolsArr) {
-			tool.setMinWidth(90);
-			tool.setToggleGroup(tools);
-			tool.setCursor(Cursor.HAND);
-		}
-
-		setButtonsProps(toolsArr,tools);
+		setButtonsProps(listOfButtons,tools);
+		setColorPickersProps(listOfColorPickers);
 		setSliderProps(slider);
-		VBox buttonsBox = setButtonsBox(toolsArr,controlsArr);
-		HBox topButtonsBox = new HBox(10);
-		Label undoLabel = new Label("0");
-		Label redoLabel = new Label("0");
-		topButtonsBox.getChildren().add(undoLabel);
-		topButtonsBox.getChildren().addAll(topToolsArr);
-		topButtonsBox.getChildren().add(redoLabel);
-		topButtonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
-		topButtonsBox.setStyle("-fx-background-color: #999");
-		topButtonsBox.setPrefHeight(25);
-		topButtonsBox.setAlignment(Pos.CENTER);
+
+
+		VBox buttonsBox = setButtonsBox(leftControls);
+		HBox topButtonsBox = setTopButtonsBox(topControls);
+
 
 		//relaciono el slider del borde con el setlinewidth de la figura seleccionada.
+		// Esto hace que se pueda ver el nuevo borde mientras lo arrastras y no tener que esperar a soltar. 
 		slider.valueProperty().addListener((observable, oldValue, newValue) -> {
 				if (selectedFigure !=null ) {
 					selectedFigure.setLineWidth((double) newValue);
@@ -223,15 +217,24 @@ public class PaintPane extends BorderPane {
 		}
 	}
 
-	private VBox setButtonsBox(ToggleButton[] toolsArr, Control[] controlsArr){
+	private VBox setButtonsBox(Control[] controls){
 		VBox buttonsBox = new VBox(10);
-		buttonsBox.getChildren().addAll(toolsArr);
-		buttonsBox.getChildren().addAll(controlsArr);
+		buttonsBox.getChildren().addAll(controls);
 		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		return buttonsBox;
 	}
+	private HBox setTopButtonsBox(Control[] controls){
+		HBox topButtonsBox = new HBox(10);
+		topButtonsBox.getChildren().addAll(topControls);
+		topButtonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
+		topButtonsBox.setStyle("-fx-background-color: #999");
+		topButtonsBox.setPrefHeight(25);
+		topButtonsBox.setAlignment(Pos.CENTER);
+		return topButtonsBox;
+	}
+
 
 	private void setButtonsProps(ToggleButton[] toolsArr, ToggleGroup tools){
 		for (ToggleButton tool : toolsArr) {
@@ -240,11 +243,18 @@ public class PaintPane extends BorderPane {
 			tool.setCursor(Cursor.HAND);
 		}
 	}
-
+	private void setColorPickersProps(ColorPicker[] colorPickers) {
+		for (ColorPicker colorPicker : colorPickers) {
+			colorPicker.setMinWidth(90);
+			colorPicker.setCursor(Cursor.HAND);
+		}
+	}
 	private void setSliderProps(Slider slider) {
 		slider.setShowTickMarks(true);
 		slider.setShowTickLabels(true);
 		slider.setMajorTickUnit(25);
+		slider.setMinWidth(90);
+		slider.setCursor(Cursor.HAND);
 	}
 	Figure figureStatus(Point eventPoint, StringBuilder label) {
 		for(Figure figure : canvasState.figures()) {
