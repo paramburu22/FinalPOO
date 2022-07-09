@@ -48,6 +48,7 @@ public class CanvasState {
     public void undoAction() {
         PaintAction action = unDo.getLast();
         unDo.removeLast();
+
         System.out.println(String.format("Cuadrado en lista: %s", list.get(action.getIndex())));
         Figure redoOldFigure = list.get(action.getIndex()).clone();
         System.out.println(String.format("Cuadrado en lista clonado: %s", redoOldFigure));
@@ -88,19 +89,21 @@ public class CanvasState {
     public void redoAction() {
        PaintAction action = reDo.getLast();
        reDo.removeLast();
-       Figure undoOldFigure = list.get(action.getIndex()).clone();
        if(action.getActionType() == ActionType.DRAW) {
            replaceFigureInList(action);
-           toUndo(action.getActionType(), list.get(action.getIndex()).clone(), list.get(action.getIndex()));
+           unDo.add(new PaintAction(action.getActionType(), list.get(action.getIndex()).clone(), action.getIndex()));
            return;
        }
-       if(action.getActionType() == ActionType.DECREASE) {
-           toUndo(action.getActionType(), undoOldFigure, list.get(action.getIndex()));
+       Figure undoOldFigure = list.get(action.getIndex()).clone();
+       if(action.getActionType() == ActionType.DELETE) {
+          // toUndo(action.getActionType(), undoOldFigure, list.get(action.getIndex()));
+           unDo.add(new PaintAction(action.getActionType(), undoOldFigure, action.getIndex()));
            list.remove(action.getIndex());
            return;
        }
        list.set(action.getIndex(), action.getOldFigure());
-       toUndo(action.getActionType(), undoOldFigure, list.get(action.getIndex()));
+        unDo.add(new PaintAction(action.getActionType(), undoOldFigure, action.getIndex()));
+      // toUndo(action.getActionType(), undoOldFigure, list.get(action.getIndex()));
     }
 
     public void replaceFigureInList(PaintAction action) {

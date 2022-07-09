@@ -119,7 +119,8 @@ public class PaintPane extends BorderPane {
 				if(figureButton.isSelected()) {
 					Figure newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
 					canvasState.addFigure(newFigure);
-					canvasState.toUndo(ActionType.DRAW, newFigure.clone(), newFigure);
+					//canvasState.toUndo(ActionType.DRAW, newFigure.clone(), newFigure);
+					callToUnDo(ActionType.DRAW, newFigure.clone(), newFigure);
 				}
 			}
 
@@ -159,7 +160,8 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.setLineColor(lineColorPicker.getValue());
-				canvasState.toUndo(ActionType.LINECOLOR, oldFigure, selectedFigure);
+				//canvasState.toUndo(ActionType.LINECOLOR, oldFigure, selectedFigure);
+				callToUnDo(ActionType.LINECOLOR, oldFigure, selectedFigure);
 			}
 			redrawCanvas();
 		});
@@ -169,7 +171,8 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
-				canvasState.toUndo(ActionType.FILLCOLOR, oldFigure, selectedFigure);
+				//canvasState.toUndo(ActionType.FILLCOLOR, oldFigure, selectedFigure);
+				callToUnDo(ActionType.FILLCOLOR, oldFigure, selectedFigure);
 			}
 			redrawCanvas();
 		});
@@ -177,7 +180,7 @@ public class PaintPane extends BorderPane {
 		//borrar la figura
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
-				canvasState.toUndo(ActionType.DELETE, selectedFigure.clone(), selectedFigure);
+				callToUnDo(ActionType.DELETE, selectedFigure.clone(), selectedFigure);
 				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
@@ -189,7 +192,7 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
 				System.out.println(String.format("cuadrado clonado: %s", oldFigure.toString()));
-				canvasState.toUndo(ActionType.INCREASE, oldFigure, selectedFigure);
+				callToUnDo(ActionType.INCREASE, oldFigure, selectedFigure);
 				selectedFigure.increase();
 				System.out.println(String.format("old %s\n new %s", oldFigure.toString(),selectedFigure.toString()));
 				redrawCanvas();
@@ -199,7 +202,7 @@ public class PaintPane extends BorderPane {
 		decreaseButton.setOnAction(event-> {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
-				canvasState.toUndo(ActionType.DECREASE, oldFigure, selectedFigure);
+				callToUnDo(ActionType.DECREASE, oldFigure, selectedFigure);
 				selectedFigure.decrease();
 				redrawCanvas();
 			}
@@ -207,24 +210,28 @@ public class PaintPane extends BorderPane {
 
 		// realiza el undo dependiendo la accion correspondiente
 		undoButton.setOnAction(event ->{
+
 			if(canvasState.getUnDoSize() == 0) {
 				throw new NothingToDoException(undoButton.getText());
 			}
 
 			canvasState.undoAction();
-			undoLabel.setText(String.format("%s", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "0"));
+			undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
+			redoLabel.setText(String.format("[%d] %s", canvasState.getReDoSize() ,canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():""));
 			redrawCanvas();
+
 
 		});
 
 		//realiza el redo dependiendo de la accion correspondiente
 		redoButton.setOnAction(event ->{
 			if(canvasState.getReDoSize() == 0) {
-				throw new NothingToDoException(redoButton.getText());
+			throw new NothingToDoException(redoButton.getText());
 			}
 
 			canvasState.redoAction();
-			redoLabel.setText(String.format("%s",canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():"0"));
+			redoLabel.setText(String.format("[%d] %s", canvasState.getReDoSize() ,canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():""));
+			undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
 			redrawCanvas();
 		});
 
@@ -317,8 +324,12 @@ public class PaintPane extends BorderPane {
 			alert.setHeaderText(MESSAGE + text);
 			alert.showAndWait();
 		}
+	}
 
-
+	private void callToUnDo(ActionType type, Figure oldFigure, Figure newFigure){
+		canvasState.toUndo(type, oldFigure, newFigure);
+		undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
+		redoLabel.setText(String.format("[%d] %s", canvasState.getReDoSize() ,canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():""));
 	}
 
 }

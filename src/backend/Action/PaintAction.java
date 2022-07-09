@@ -28,6 +28,6 @@ public class PaintAction {
 
     @Override
     public String toString() {
-        return String.format("%s %s",oldFigure.getFigureName(),actionType);
+        return String.format("%s %s",actionType,oldFigure.getFigureName());
     }
 }
