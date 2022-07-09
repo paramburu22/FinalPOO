@@ -110,7 +110,7 @@ public class PaintPane extends BorderPane {
 				if(figureButton.isSelected()) {
 					Figure newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
 					canvasState.addFigure(newFigure);
-					//canvasState.toUndo(ActionType.DRAW, newFigure, newFigure);
+					canvasState.toUndo(ActionType.DRAW, null, newFigure);
 				}
 			}
 
@@ -150,7 +150,7 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.setLineColor(lineColorPicker.getValue());
-				//canvasState.toUndo(ActionType.LINECOLOR, oldFigure, selectedFigure);
+				canvasState.toUndo(ActionType.LINECOLOR, oldFigure, selectedFigure);
 			}
 			redrawCanvas();
 		});
@@ -160,7 +160,7 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
-				//canvasState.toUndo(ActionType.FILLCOLOR, oldFigure, selectedFigure);
+				canvasState.toUndo(ActionType.FILLCOLOR, oldFigure, selectedFigure);
 			}
 			redrawCanvas();
 		});
@@ -168,7 +168,7 @@ public class PaintPane extends BorderPane {
 		//borrar la figura
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
-				//canvasState.toUndo(ActionType.LINECOLOR, selectedFigure, selectedFigure);
+				canvasState.toUndo(ActionType.DELETE, selectedFigure.clone(), selectedFigure);
 				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
@@ -180,7 +180,7 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.increase();
-				//canvasState.toUndo(ActionType.INCREASE, oldFigure, selectedFigure);
+				canvasState.toUndo(ActionType.INCREASE, oldFigure, selectedFigure);
 				redrawCanvas();
 			}
 		});
@@ -189,7 +189,7 @@ public class PaintPane extends BorderPane {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.decrease();
-				//canvasState.toUndo(ActionType.DECREASE, oldFigure, selectedFigure);
+				canvasState.toUndo(ActionType.DECREASE, oldFigure, selectedFigure);
 				redrawCanvas();
 			}
 		});
