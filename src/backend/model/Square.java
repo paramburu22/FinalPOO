@@ -4,11 +4,9 @@ import javafx.scene.paint.Color;
 
 public abstract class Square extends Rectangle {
 
-    private double size;
 
-    public Square(Point topLeft, double size, Color lineColor, Color backGroundColor, double lineWidth) {
-        super(topLeft,new Point(topLeft.x + size, topLeft.y + size),lineColor,backGroundColor,lineWidth);
-        this.size = size;
+    public Square(Point topLeft, Point bottomRight, Color lineColor, Color backGroundColor, double lineWidth) {
+        super(topLeft,bottomRight,lineColor,backGroundColor,lineWidth);
     }
 
     @Override
@@ -26,7 +24,4 @@ public abstract class Square extends Rectangle {
         return "Cuadrado";
     }
 
-    public double getSize() {
-        return size;
-    }
 }

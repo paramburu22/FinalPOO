@@ -6,9 +6,9 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public class DrawableSquare extends Square {
-    private GraphicsContext gc;
-    public DrawableSquare(Point topLeft, double size, Color lineColor, Color backGroundColor, double lineWidth, GraphicsContext gc) {
-        super(topLeft, size, lineColor, backGroundColor, lineWidth);
+    private final GraphicsContext gc;
+    public DrawableSquare(Point topLeft, Point bottomRight, Color lineColor, Color backGroundColor, double lineWidth, GraphicsContext gc) {
+        super(topLeft, bottomRight, lineColor, backGroundColor, lineWidth);
         this.gc = gc;
     }
 
@@ -22,6 +22,7 @@ public class DrawableSquare extends Square {
 
     @Override
     public DrawableSquare clone() {
-        return new DrawableSquare(new Point(getTopLeft().getX(),getTopLeft().getY()), getSize(), getLineColor(), getBackGroundColor(), getLineWidth(), gc);
+        return new DrawableSquare(new Point(getTopLeft().getX(),getTopLeft().getY()), new Point(getBottomRight().getX(), getBottomRight().getY()),
+                getLineColor(), getBackGroundColor(), getLineWidth(), gc);
     }
 }
