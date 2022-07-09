@@ -49,14 +49,14 @@ public class PaintPane extends BorderPane {
 	ToggleButton increaseButton = new ToggleButton("Agrandar");
 	ToggleButton decreaseButton = new ToggleButton("Achicar");
 	ToggleButton undoButton = new ToggleButton("Deshacer");
-	ToggleButton redo = new ToggleButton("Rehacer");
+	ToggleButton redoButton = new ToggleButton("Rehacer");
 	Label undoLabel = new Label("0");
 	Label redoLabel = new Label("0");
 	FigureToggleButton[] figureButtonsArr = { rectangleButton, circleButton, squareButton, ellipseButton};
-	ToggleButton[] listOfButtons = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton,increaseButton, decreaseButton, undoButton,redo};
+	ToggleButton[] listOfButtons = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton,increaseButton, decreaseButton, undoButton,redoButton};
 	ColorPicker[] listOfColorPickers = {lineColorPicker, fillColorPicker};
 	Control[] leftControls = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, new Label("Borde"), slider, lineColorPicker, new Label("Relleno"), fillColorPicker,increaseButton, decreaseButton};
-	Control[] topControls = {undoLabel, undoButton,redo, redoLabel};
+	Control[] topControls = {undoLabel, undoButton,redoButton, redoLabel};
 
 	// Dibujar una figura
 	Point startPoint;
@@ -180,9 +180,10 @@ public class PaintPane extends BorderPane {
 		increaseButton.setOnAction(event->{
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
+				System.out.println(String.format("cuadrado clonado: %s", oldFigure.toString()));
 				canvasState.toUndo(ActionType.INCREASE, oldFigure, selectedFigure);
 				selectedFigure.increase();
-				System.out.println(String.format("old %s/n new/s", oldFigure.toString(),selectedFigure.toString()));
+				System.out.println(String.format("old %s/n new %s", oldFigure.toString(),selectedFigure.toString()));
 				redrawCanvas();
 			}
 		});
@@ -199,7 +200,14 @@ public class PaintPane extends BorderPane {
 		// realiza el undo dependiendo la accion correspondiente
 		undoButton.setOnAction(event ->{
 			canvasState.undoAction();
-			undoLabel.setText(String.format("%s",canvasState.getUnDoSize() != 0 ?canvasState.getLastAction():"0"));
+			undoLabel.setText(String.format("%s",canvasState.getUnDoSize() != 0 ?canvasState.getUndoLastAction():"0"));
+			redrawCanvas();
+		});
+
+		//realiza el redo dependiendo de la accion correspondiente
+		redoButton.setOnAction(event ->{
+			canvasState.redoAction();
+			redoLabel.setText(String.format("%s",canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():"0"));
 			redrawCanvas();
 		});
 

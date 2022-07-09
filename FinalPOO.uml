@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>C:/Users/paramburu/Documents/GitHub/FinalPOO</OriginalElement>
+  <nodes>
+    <node x="497.0" y="1618.0">backend.Action.ActionType</node>
+    <node x="609.0" y="1287.0">frontend.Buttons.FigureMaker</node>
+    <node x="364.0" y="876.0">frontend.models.DrawableEllipse</node>
+    <node x="0.0" y="1495.0">frontend.Buttons.RectangleButton</node>
+    <node x="848.0" y="876.0">frontend.models.DrawableRectangle</node>
+    <node x="926.0" y="1618.0">frontend.StatusPane</node>
+    <node x="1020.75" y="0.0">backend.Interfaces.Modificable</node>
+    <node x="1156.0" y="1618.0">frontend.MainFrame</node>
+    <node x="1107.25" y="456.0">backend.model.Rectangle</node>
+    <node x="703.5" y="1391.0">frontend.Buttons.FigureToggleButton</node>
+    <node x="1649.0" y="1287.0">frontend.PaintPane</node>
+    <node x="0.0" y="1094.0">frontend.models.DrawableCircle</node>
+    <node x="1385.0" y="1618.0">frontend.AppMenuBar</node>
+    <node x="805.75" y="11.0">backend.Interfaces.Movable</node>
+    <node x="1693.5" y="0.0">backend.CanvasState</node>
+    <node x="812.0" y="1495.0">frontend.Buttons.SquareButton</node>
+    <node x="1218.0" y="1495.0">frontend.Buttons.EllipseButton</node>
+    <node x="731.0" y="1618.0">frontend.AppLauncher</node>
+    <node x="1225.5" y="1118.0">frontend.models.DrawableSquare</node>
+    <node x="1297.0" y="841.0">backend.model.Square</node>
+    <node x="406.0" y="1495.0">frontend.Buttons.CircleButton</node>
+    <node x="241.5" y="434.0">backend.model.Ellipse</node>
+    <node x="72.0" y="808.0">backend.model.Circle</node>
+    <node x="0.0" y="1618.0">backend.Action.PaintAction</node>
+    <node x="720.9516129032259" y="126.0">backend.model.Figure</node>
+    <node x="284.0" y="1618.0">backend.model.Point</node>
+    <node x="673.75" y="11.0">backend.Interfaces.Drawable</node>
+    <node x="462.75" y="11.0">backend.Interfaces.Selectable</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="frontend.Buttons.FigureToggleButton" target="frontend.Buttons.FigureMaker" relationship="REALIZATION">
+      <point x="0.0" y="-27.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="frontend.Buttons.CircleButton" target="frontend.Buttons.FigureToggleButton" relationship="GENERALIZATION">
+      <point x="0.0" y="-39.0" />
+      <point x="599.0" y="1470.0" />
+      <point x="802.0" y="1470.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="backend.model.Figure" target="backend.Interfaces.Selectable" relationship="REALIZATION">
+      <point x="0.0" y="-129.0" />
+      <point x="820.9516129032259" y="101.0" />
+      <point x="558.25" y="101.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="backend.model.Figure" target="backend.Interfaces.Modificable" relationship="REALIZATION">
+      <point x="0.0" y="-129.0" />
+      <point x="820.9516129032259" y="101.0" />
+      <point x="1086.75" y="101.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="backend.model.Figure" target="backend.Interfaces.Movable" relationship="REALIZATION">
+      <point x="0.0" y="-129.0" />
+      <point x="820.9516129032259" y="101.0" />
+      <point x="903.25" y="101.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="backend.model.Ellipse" target="backend.model.Figure" relationship="GENERALIZATION">
+      <point x="0.0" y="-162.0" />
+      <point x="402.0" y="409.0" />
+      <point x="820.9516129032259" y="409.0" />
+      <point x="0.0" y="129.0" />
+    </edge>
+    <edge source="frontend.models.DrawableEllipse" target="backend.model.Ellipse" relationship="GENERALIZATION">
+      <point x="0.0" y="-50.0" />
+      <point x="596.0" y="783.0" />
+      <point x="402.0" y="783.0" />
+      <point x="0.0" y="162.0" />
+    </edge>
+    <edge source="frontend.Buttons.RectangleButton" target="frontend.Buttons.FigureToggleButton" relationship="GENERALIZATION">
+      <point x="0.0" y="-39.0" />
+      <point x="193.0" y="1470.0" />
+      <point x="802.0" y="1470.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="backend.model.Square" target="backend.model.Rectangle" relationship="GENERALIZATION">
+      <point x="0.0" y="-85.0" />
+      <point x="1437.0" y="783.0" />
+      <point x="1249.75" y="783.0" />
+      <point x="0.0" y="140.0" />
+    </edge>
+    <edge source="backend.model.Rectangle" target="backend.model.Figure" relationship="GENERALIZATION">
+      <point x="0.0" y="-140.0" />
+      <point x="1249.75" y="409.0" />
+      <point x="820.9516129032259" y="409.0" />
+      <point x="0.0" y="129.0" />
+    </edge>
+    <edge source="backend.model.Circle" target="backend.model.Ellipse" relationship="GENERALIZATION">
+      <point x="0.0" y="-118.0" />
+      <point x="208.0" y="783.0" />
+      <point x="402.0" y="783.0" />
+      <point x="0.0" y="162.0" />
+    </edge>
+    <edge source="frontend.models.DrawableCircle" target="backend.model.Circle" relationship="GENERALIZATION">
+      <point x="0.0" y="-74.0" />
+      <point x="0.0" y="118.0" />
+    </edge>
+    <edge source="frontend.Buttons.EllipseButton" target="frontend.Buttons.FigureToggleButton" relationship="GENERALIZATION">
+      <point x="0.0" y="-39.0" />
+      <point x="1411.0" y="1470.0" />
+      <point x="802.0" y="1470.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="frontend.models.DrawableSquare" target="backend.model.Square" relationship="GENERALIZATION">
+      <point x="0.0" y="-50.0" />
+      <point x="0.0" y="85.0" />
+    </edge>
+    <edge source="frontend.Buttons.SquareButton" target="frontend.Buttons.FigureToggleButton" relationship="GENERALIZATION">
+      <point x="0.0" y="-39.0" />
+      <point x="1005.0" y="1470.0" />
+      <point x="802.0" y="1470.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="backend.model.Figure" target="backend.Interfaces.Drawable" relationship="REALIZATION">
+      <point x="0.0" y="-129.0" />
+      <point x="820.9516129032259" y="101.0" />
+      <point x="729.75" y="101.0" />
+      <point x="0.0" y="27.0" />
+    </edge>
+    <edge source="frontend.models.DrawableRectangle" target="backend.model.Rectangle" relationship="GENERALIZATION">
+      <point x="0.0" y="-50.0" />
+      <point x="1062.5" y="783.0" />
+      <point x="1249.75" y="783.0" />
+      <point x="0.0" y="140.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="0.6655737704918033" showDependencies="false" x="280.59113300492606" y="298.59113300492606" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

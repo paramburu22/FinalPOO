@@ -4,7 +4,9 @@ import backend.Action.ActionType;
 import backend.Action.PaintAction;
 import backend.model.Figure;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class CanvasState {
 
@@ -19,10 +21,9 @@ public class CanvasState {
 
     private final Deque<PaintAction> unDo = new LinkedList<>();
 
-    private final Queue<PaintAction> reDo = new LinkedList<>();
+    private final Deque<PaintAction> reDo = new LinkedList<>();
 
     private final List<Figure> list = new ArrayList<>();
-
 
     public void addFigure(Figure figure) {
         list.add(figure);
@@ -34,34 +35,39 @@ public class CanvasState {
         System.out.println(String.format("%s %s", action.toString(), listFigure.getFigureName()));
     }
 
+    public void deleteFigure(Figure figure) {
+        list.remove(figure);
+    }
+
+    public Iterable<Figure> figures() {
+        return new ArrayList<>(list);
+    }
+
     public void undoAction() {
         PaintAction action = unDo.getLast();
         unDo.removeLast();
-      //  toRedo(action.getActionType(), list.get(getLastAction().getIndex()).clone(), );
+        System.out.println(String.format("Cuadrado en lista: %s", list.get(action.getIndex())));
+        Figure redoOldFigure = list.get(action.getIndex()).clone();
+        System.out.println(String.format("Cuadrado en lista clonado: %s", redoOldFigure));
         //si es DRAW solo elimino la figura
         if(action.getActionType() == ActionType.DRAW) {
-            System.out.println("removiendo ");
+            toRedo(action.getActionType(), redoOldFigure, list.get(action.getIndex()));
             list.remove(action.getIndex());
             return;
         }
         //si es DELETE vuelvo a agregarla a la lista en la misma posicion en la que estaba
         if(action.getActionType() == ActionType.DELETE) {
-            Figure last = action.getOldFigure();
-            for (int i = action.getIndex(); i <= list.size(); i++) {
-                if(i == list.size()) {
-                    list.add(last);
-                    return;
-                }
-                Figure current = list.get(i);
-                list.set(i, last);
-                last = current;
-            }
+            replaceFigureInList(action);
+            toRedo(action.getActionType(), list.get(action.getIndex()).clone(), list.get(action.getIndex()));
             return;
         }
         list.set(action.getIndex(), action.getOldFigure());
+        //paso la accion a redo (accion type, figura actual y figura A LA QUE SE QUIERE VOLVER
+        System.out.println(String.format("Cuadrado antes de redo: %s", redoOldFigure.toString()));
+        toRedo(action.getActionType(), redoOldFigure, list.get(action.getIndex()));
     }
 
-    public PaintAction getLastAction() {
+    public PaintAction getUndoLastAction() {
         return unDo.getLast();
     }
 
@@ -73,16 +79,43 @@ public class CanvasState {
         return unDo;
     }
 
-    public void toRedo() {
-
+    public void toRedo(ActionType action, Figure currentFigure, Figure redoListFigure) {
+        reDo.add(new PaintAction(action, currentFigure, list.indexOf(redoListFigure)));
     }
 
-    public void deleteFigure(Figure figure) {
-        list.remove(figure);
+    public void redoAction() {
+       unDo.clear(); //si llamo a redo se vacia la cola de undo
+       PaintAction action = reDo.getLast();
+       reDo.removeLast();
+       Figure undoOldFigure = list.get(action.getIndex()).clone();
+       if(action.getActionType() == ActionType.DRAW) {
+           replaceFigureInList(action);
+           toUndo(action.getActionType(), list.get(action.getIndex()).clone(), list.get(action.getIndex()));
+           return;
+       }
+       if(action.getActionType() == ActionType.DECREASE) {
+           toUndo(action.getActionType(), undoOldFigure, list.get(action.getIndex()));
+           list.remove(action.getIndex());
+           return;
+       }
+       list.set(action.getIndex(), action.getOldFigure());
+       toUndo(action.getActionType(), undoOldFigure, list.get(action.getIndex()));
     }
 
-    public Iterable<Figure> figures() {
-        return new ArrayList<>(list);
+    public void replaceFigureInList(PaintAction action) {
+        Figure last = action.getOldFigure();
+        for (int i = action.getIndex(); i <= list.size(); i++) {
+            if(i == list.size()) {
+                list.add(last);
+                return;
+            }
+            Figure current = list.get(i);
+            list.set(i, last);
+            last = current;
+        }
     }
 
+    public int getReDoSize() { return reDo.size(); }
+
+    public PaintAction getRedoLastAction() { return reDo.getLast(); }
 }
