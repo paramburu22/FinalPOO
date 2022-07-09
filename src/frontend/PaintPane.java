@@ -207,13 +207,22 @@ public class PaintPane extends BorderPane {
 
 		// realiza el undo dependiendo la accion correspondiente
 		undoButton.setOnAction(event ->{
+			if(canvasState.getUnDoSize() == 0) {
+				throw new NothingToDoException(undoButton.getText());
+			}
+
 			canvasState.undoAction();
-			undoLabel.setText(String.format("%s",canvasState.getUnDoSize() != 0 ?canvasState.getUndoLastAction():"0"));
+			undoLabel.setText(String.format("%s", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "0"));
 			redrawCanvas();
+
 		});
 
 		//realiza el redo dependiendo de la accion correspondiente
 		redoButton.setOnAction(event ->{
+			if(canvasState.getReDoSize() == 0) {
+				throw new NothingToDoException(redoButton.getText());
+			}
+
 			canvasState.redoAction();
 			redoLabel.setText(String.format("%s",canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():"0"));
 			redrawCanvas();
@@ -297,6 +306,19 @@ public class PaintPane extends BorderPane {
 		}
 		statusPane.updateStatus(eventPoint.toString());
 		return null;
+	}
+
+	public class NothingToDoException extends RuntimeException {
+		private final static String MESSAGE = "No hay acciones para ";
+		public NothingToDoException(String text) {
+			super(MESSAGE + text);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText(MESSAGE + text);
+			alert.showAndWait();
+		}
+
+
 	}
 
 }
