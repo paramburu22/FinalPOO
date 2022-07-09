@@ -2,9 +2,10 @@ package backend;
 
 import backend.Action.ActionType;
 import backend.Action.PaintAction;
+import backend.Exception.NothingSelectedException;
+import backend.Exception.NothingToDoException;
 import backend.model.Figure;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -45,7 +46,9 @@ public class CanvasState {
         return new ArrayList<>(list);
     }
 
-    public void undoAction() {
+    public void undoAction() throws NothingToDoException {
+        if(unDo.size() == 0)
+            throw new NothingToDoException("Deshacer");
         PaintAction action = unDo.getLast();
         unDo.removeLast();
 
@@ -86,7 +89,9 @@ public class CanvasState {
         reDo.add(new PaintAction(action, currentFigure, list.indexOf(redoListFigure)));
     }
 
-    public void redoAction() {
+    public void redoAction() throws NothingToDoException {
+        if(reDo.size() == 0)
+            throw new NothingToDoException("Rehacer");
        PaintAction action = reDo.getLast();
        reDo.removeLast();
        if(action.getActionType() == ActionType.DRAW) {
@@ -122,4 +127,9 @@ public class CanvasState {
     public int getReDoSize() { return reDo.size(); }
 
     public PaintAction getRedoLastAction() { return reDo.getLast(); }
+
+    public void checkSelectedFigureIsNull(ActionType type, Figure selectedFigure) throws NothingSelectedException {
+        if(selectedFigure == null)
+            throw new NothingSelectedException(type.toString());
+    }
 }

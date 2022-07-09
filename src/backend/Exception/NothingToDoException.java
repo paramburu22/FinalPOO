@@ -1,4 +1,4 @@
-package backend.Exceptions;
+package backend.Exception;
 
 
 public class NothingToDoException extends Exception {
