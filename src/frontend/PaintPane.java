@@ -182,12 +182,17 @@ public class PaintPane extends BorderPane {
 
 		//borrar la figura
 		deleteButton.setOnAction(event -> {
-			if (selectedFigure != null) {
-				canvasState.toUndo(ActionType.DELETE, selectedFigure.clone(), selectedFigure);
-				canvasState.deleteFigure(selectedFigure);
-				selectedFigure = null;
-				redrawCanvas();
+			try {
+				canvasState.checkSelectedFigureIsNull(ActionType.INCREASE,selectedFigure);
+			} catch (NothingSelectedException ex) {
+				showAlarm(ex.getMessage());
+				return;
 			}
+			canvasState.toUndo(ActionType.DELETE, selectedFigure.clone(), selectedFigure);
+			canvasState.deleteFigure(selectedFigure);
+			selectedFigure = null;
+			updateLabels();
+			redrawCanvas();
 		});
 
 		// incrementa 10% las dimensiones de la figura
