@@ -37,10 +37,25 @@ public class CanvasState {
     public void undoAction() {
         PaintAction action = unDo.getLast();
         unDo.removeLast();
-        reDo.add(action);
+      //  toRedo(action.getActionType(), list.get(getLastAction().getIndex()).clone(), );
+        //si es DRAW solo elimino la figura
         if(action.getActionType() == ActionType.DRAW) {
             System.out.println("removiendo ");
             list.remove(action.getIndex());
+            return;
+        }
+        //si es DELETE vuelvo a agregarla a la lista en la misma posicion en la que estaba
+        if(action.getActionType() == ActionType.DELETE) {
+            Figure last = action.getOldFigure();
+            for (int i = action.getIndex(); i <= list.size(); i++) {
+                if(i == list.size()) {
+                    list.add(last);
+                    return;
+                }
+                Figure current = list.get(i);
+                list.set(i, last);
+                last = current;
+            }
             return;
         }
         list.set(action.getIndex(), action.getOldFigure());

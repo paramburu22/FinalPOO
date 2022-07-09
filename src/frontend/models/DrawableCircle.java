@@ -30,7 +30,7 @@ public class DrawableCircle extends Circle {
 
     @Override
     public Figure clone() {
-        return new DrawableCircle(this.getCenterPoint(), this.getRadius(), this.getLineColor(), this.getBackGroundColor(), this.getLineWidth(), this.gc);
+        return new DrawableCircle(getCenterPoint(), getRadius(), getLineColor(), getBackGroundColor(), getLineWidth(), gc);
     }
 
     /*@Override

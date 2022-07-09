@@ -22,6 +22,6 @@ public class DrawableSquare extends Square {
 
     @Override
     public DrawableSquare clone() {
-        return new DrawableSquare(this.getTopLeft(), this.getSize(), this.getLineColor(), this.getBackGroundColor(), this.getLineWidth(), this.gc);
+        return new DrawableSquare(new Point(getTopLeft().getX(),getTopLeft().getY()), getSize(), getLineColor(), getBackGroundColor(), getLineWidth(), gc);
     }
 }

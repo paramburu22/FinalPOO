@@ -21,7 +21,7 @@ public class DrawableEllipse extends Ellipse {
 
     @Override
     public DrawableEllipse clone() {
-        return new DrawableEllipse(this.getCenterPoint(), this.getsMayorAxis() , this.getsMinorAxis() , this.getLineColor(), this.getBackGroundColor(), this.getLineWidth(), this.gc);
+        return new DrawableEllipse(getCenterPoint(), getsMayorAxis() , getsMinorAxis() , getLineColor(), getBackGroundColor(), getLineWidth(), gc);
     }
 
 }

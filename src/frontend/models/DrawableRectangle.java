@@ -22,6 +22,6 @@ public class DrawableRectangle extends Rectangle {
 
     @Override
     public DrawableRectangle clone() {
-        return new DrawableRectangle(this.getTopLeft(), this.getBottomRight(), this.getLineColor(), this.getBackGroundColor(), this.getLineWidth(), this.gc);
+        return new DrawableRectangle(new Point(getTopLeft().getX(), getTopLeft().getY()), new Point(getBottomRight().getX(), getBottomRight().getY()), getLineColor(), getBackGroundColor(), getLineWidth(), gc);
     }
 }

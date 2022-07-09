@@ -180,8 +180,9 @@ public class PaintPane extends BorderPane {
 		increaseButton.setOnAction(event->{
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
-				selectedFigure.increase();
 				canvasState.toUndo(ActionType.INCREASE, oldFigure, selectedFigure);
+				selectedFigure.increase();
+				System.out.println(String.format("old %s/n new/s", oldFigure.toString(),selectedFigure.toString()));
 				redrawCanvas();
 			}
 		});
@@ -189,8 +190,8 @@ public class PaintPane extends BorderPane {
 		decreaseButton.setOnAction(event-> {
 			if(selectedFigure != null) {
 				Figure oldFigure = selectedFigure.clone();
-				selectedFigure.decrease();
 				canvasState.toUndo(ActionType.DECREASE, oldFigure, selectedFigure);
+				selectedFigure.decrease();
 				redrawCanvas();
 			}
 		});
