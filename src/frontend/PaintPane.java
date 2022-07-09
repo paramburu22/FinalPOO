@@ -4,6 +4,7 @@ package frontend;
 import backend.Action.ActionType;
 import backend.Action.PaintAction;
 import backend.CanvasState;
+import backend.Exceptions.NothingToDoException;
 import backend.model.*;
 import backend.model.Point;
 import frontend.Buttons.*;
@@ -231,11 +232,12 @@ public class PaintPane extends BorderPane {
 
 		//realiza el redo dependiendo de la accion correspondiente
 		redoButton.setOnAction(event ->{
-			if(canvasState.getReDoSize() == 0) {
-			throw new NothingToDoException(redoButton.getText());
+			try {
+				canvasState.redoAction();
+			} catch(NothingToDoException ex) {
+				showAlarm(ex.getMessage());
 			}
 
-			canvasState.redoAction();
 			redoLabel.setText(String.format("[%d] %s", canvasState.getReDoSize() ,canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():""));
 			undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
 			redrawCanvas();
@@ -323,19 +325,31 @@ public class PaintPane extends BorderPane {
 		return null;
 	}
 
-	public class NothingToDoException extends RuntimeException {
-		private final static String MESSAGE = "No hay acciones para ";
-		public NothingToDoException(String text) {
-			super(MESSAGE + text);
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText(MESSAGE + text);
-			alert.showAndWait();
-		}
+
+//
+//	public class NothingToDoException extends RuntimeException {
+//		private final static String MESSAGE = "No hay acciones para ";
+//		public NothingToDoException(String text) {
+//			super(MESSAGE + text);
+//			Alert alert = new Alert(Alert.AlertType.ERROR);
+//			alert.setTitle("Error");
+//			alert.setHeaderText(MESSAGE + text);
+//			alert.showAndWait();
+//		}
+//	}
+
+	private void showAlarm(String message){
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText(message);
+		alert.showAndWait();
 	}
 
 	private void callToUnDo(ActionType type, Figure oldFigure, Figure newFigure){
 		canvasState.toUndo(type, oldFigure, newFigure);
+	}
+
+	private void updateLabels(){
 		undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
 		redoLabel.setText(String.format("[%d] %s", canvasState.getReDoSize() ,canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():""));
 	}
