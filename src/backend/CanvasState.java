@@ -41,7 +41,7 @@ public class CanvasState {
         list.remove(figure);
     }
 
-    public Iterable<Figure> figures() {
+    public List<Figure> figures() {
         return new ArrayList<>(list);
     }
 

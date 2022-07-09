@@ -5,10 +5,12 @@ import backend.Action.ActionType;
 import backend.Action.PaintAction;
 import backend.CanvasState;
 import backend.model.*;
+import backend.model.Point;
 import frontend.Buttons.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,7 +20,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class PaintPane extends BorderPane {
@@ -304,7 +310,9 @@ public class PaintPane extends BorderPane {
 		slider.setCursor(Cursor.HAND);
 	}
 	Figure figureStatus(Point eventPoint, StringBuilder label) {
-		for(Figure figure : canvasState.figures()) {
+		List<Figure> aux = canvasState.figures();
+		Collections.reverse(aux);
+		for(Figure figure : aux){
 			if(figure.containsOn(eventPoint)) {
 				label.append(figure);
 				statusPane.updateStatus(label.toString());
