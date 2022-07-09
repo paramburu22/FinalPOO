@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 
 public abstract class Figure implements Drawable, Modificable, Selectable, Movable {
 
+
     private Color lineColor;
     private Color backGroundColor;
     private double lineWidth;
