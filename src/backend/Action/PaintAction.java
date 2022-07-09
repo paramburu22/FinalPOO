@@ -22,6 +22,10 @@ public class PaintAction {
         return oldFigure;
     }
 
+    public ActionType getActionType() {
+        return actionType;
+    }
+
     @Override
     public String toString() {
         return String.format("%s %s",oldFigure.getFigureName(),actionType);

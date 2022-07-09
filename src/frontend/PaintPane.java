@@ -2,6 +2,7 @@ package frontend;
 
 //import backend.Action.ActionType;
 import backend.Action.ActionType;
+import backend.Action.PaintAction;
 import backend.CanvasState;
 import backend.model.*;
 import frontend.Buttons.*;
@@ -110,7 +111,7 @@ public class PaintPane extends BorderPane {
 				if(figureButton.isSelected()) {
 					Figure newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
 					canvasState.addFigure(newFigure);
-					canvasState.toUndo(ActionType.DRAW, null, newFigure);
+					canvasState.toUndo(ActionType.DRAW, newFigure.clone(), newFigure);
 				}
 			}
 
@@ -211,6 +212,9 @@ public class PaintPane extends BorderPane {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for (Figure figure:canvasState.figures()) {
 			System.out.println(String.format("%s",figure));
+		}
+		for(PaintAction action : canvasState.getUnDo()){
+			System.out.println(String.format("%s",action));
 		}
 
 		for(Figure figure : canvasState.figures()) {

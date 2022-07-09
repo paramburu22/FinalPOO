@@ -31,12 +31,14 @@ public class CanvasState {
     //agrega acciones (ActionType, ) a unDo
     public void toUndo(ActionType action, Figure oldFigure, Figure listFigure) {
         unDo.add(new PaintAction(action, oldFigure, list.indexOf(listFigure)));
+        System.out.println(String.format("%s %s", action.toString(), listFigure.getFigureName()));
     }
 
     public void undoAction() {
         PaintAction action = unDo.getLast();
+        unDo.removeLast();
         reDo.add(action);
-        if(action.getOldFigure() == null) {
+        if(action.getActionType() == ActionType.DRAW) {
             System.out.println("removiendo ");
             list.remove(action.getIndex());
             return;
@@ -50,6 +52,10 @@ public class CanvasState {
 
     public int getUnDoSize() {
         return unDo.size();
+    }
+
+    public Deque<PaintAction> getUnDo(){
+        return unDo;
     }
 
     public void toRedo() {
