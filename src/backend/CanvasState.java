@@ -29,9 +29,11 @@ public class CanvasState {
         list.add(figure);
     }
 
-    //agrega acciones (ActionType, ) a unDo
+    //agrega acciones a unDo
     public void toUndo(ActionType action, Figure oldFigure, Figure listFigure) {
         unDo.add(new PaintAction(action, oldFigure, list.indexOf(listFigure)));
+        //cada vez que se agrega una accion a undo, vacio la cola de redo
+        reDo.clear();
         System.out.println(String.format("%s %s", action.toString(), listFigure.getFigureName()));
     }
 
@@ -84,7 +86,6 @@ public class CanvasState {
     }
 
     public void redoAction() {
-       unDo.clear(); //si llamo a redo se vacia la cola de undo
        PaintAction action = reDo.getLast();
        reDo.removeLast();
        Figure undoOldFigure = list.get(action.getIndex()).clone();

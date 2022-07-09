@@ -183,7 +183,7 @@ public class PaintPane extends BorderPane {
 				System.out.println(String.format("cuadrado clonado: %s", oldFigure.toString()));
 				canvasState.toUndo(ActionType.INCREASE, oldFigure, selectedFigure);
 				selectedFigure.increase();
-				System.out.println(String.format("old %s/n new %s", oldFigure.toString(),selectedFigure.toString()));
+				System.out.println(String.format("old %s\n new %s", oldFigure.toString(),selectedFigure.toString()));
 				redrawCanvas();
 			}
 		});
