@@ -1,4 +1,4 @@
-package backend.Exceptions;
+package backend.Exception;
 
 public class NothingSelectedException extends Exception {
     private final static String MESSAGE = "No hay ninguna figura seleccionada para ";

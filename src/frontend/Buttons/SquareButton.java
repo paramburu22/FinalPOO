@@ -15,7 +15,6 @@ public class SquareButton extends FigureToggleButton {
 
     @Override
     public Figure make(Point startPoint, Point endPoint, Color lineColor, Color backGroundColor, double lineWidth, GraphicsContext gc) {
-       // double size = Math.abs(endPoint.getX() - startPoint.getX());
         return new DrawableSquare(startPoint, endPoint,lineColor,backGroundColor,lineWidth,gc);
     }
 }

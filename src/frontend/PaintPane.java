@@ -4,7 +4,8 @@ package frontend;
 import backend.Action.ActionType;
 import backend.Action.PaintAction;
 import backend.CanvasState;
-import backend.Exceptions.NothingToDoException;
+import backend.Exception.NothingSelectedException;
+import backend.Exception.NothingToDoException;
 import backend.model.*;
 import backend.model.Point;
 import frontend.Buttons.*;
@@ -21,10 +22,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
-import java.awt.*;
-import java.awt.event.MouseEvent;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -127,7 +125,7 @@ public class PaintPane extends BorderPane {
 					Figure newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
 					canvasState.addFigure(newFigure);
 					//canvasState.toUndo(ActionType.DRAW, newFigure.clone(), newFigure);
-					callToUnDo(ActionType.DRAW, newFigure.clone(), newFigure);
+					canvasState.toUndo(ActionType.DRAW, newFigure.clone(), newFigure);
 				}
 			}
 
@@ -165,29 +163,27 @@ public class PaintPane extends BorderPane {
 		//cambiar el color del borde
 		lineColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				Figure oldFigure = selectedFigure.clone();
+				canvasState.toUndo(ActionType.LINECOLOR, selectedFigure.clone(), selectedFigure);
 				selectedFigure.setLineColor(lineColorPicker.getValue());
-				//canvasState.toUndo(ActionType.LINECOLOR, oldFigure, selectedFigure);
-				callToUnDo(ActionType.LINECOLOR, oldFigure, selectedFigure);
 			}
+			updateLabels();
 			redrawCanvas();
 		});
 
 		//cambiar el color del relleno
 		fillColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				Figure oldFigure = selectedFigure.clone();
+				canvasState.toUndo(ActionType.FILLCOLOR, selectedFigure.clone(), selectedFigure);
 				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
-				//canvasState.toUndo(ActionType.FILLCOLOR, oldFigure, selectedFigure);
-				callToUnDo(ActionType.FILLCOLOR, oldFigure, selectedFigure);
 			}
+			updateLabels();
 			redrawCanvas();
 		});
 
 		//borrar la figura
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
-				callToUnDo(ActionType.DELETE, selectedFigure.clone(), selectedFigure);
+				canvasState.toUndo(ActionType.DELETE, selectedFigure.clone(), selectedFigure);
 				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
@@ -196,38 +192,43 @@ public class PaintPane extends BorderPane {
 
 		// incrementa 10% las dimensiones de la figura
 		increaseButton.setOnAction(event->{
-			if(selectedFigure != null) {
-				Figure oldFigure = selectedFigure.clone();
-				System.out.println(String.format("cuadrado clonado: %s", oldFigure.toString()));
-				callToUnDo(ActionType.INCREASE, oldFigure, selectedFigure);
-				selectedFigure.increase();
-				System.out.println(String.format("old %s\n new %s", oldFigure.toString(),selectedFigure.toString()));
-				redrawCanvas();
+			try{
+				canvasState.checkSelectedFigureIsNull(ActionType.INCREASE,selectedFigure);
 			}
+			catch (NothingSelectedException ex){
+				showAlarm(ex.getMessage());
+				return;
+			}
+			canvasState.toUndo(ActionType.DECREASE, selectedFigure.clone(), selectedFigure);
+			selectedFigure.decrease();
+			updateLabels();
+			redrawCanvas();
 		});
 		// decrementa 10% las dimensiones de la figura
 		decreaseButton.setOnAction(event-> {
-			if(selectedFigure != null) {
-				Figure oldFigure = selectedFigure.clone();
-				callToUnDo(ActionType.DECREASE, oldFigure, selectedFigure);
-				selectedFigure.decrease();
-				redrawCanvas();
+			try{
+				canvasState.checkSelectedFigureIsNull(ActionType.DECREASE,selectedFigure);
 			}
-		});
+			catch (NothingSelectedException ex){
+				showAlarm(ex.getMessage());
+				return;
+			}
+			canvasState.toUndo(ActionType.DECREASE, selectedFigure.clone(), selectedFigure);
+			selectedFigure.decrease();
+			updateLabels();
+			redrawCanvas();
+			});
 
 		// realiza el undo dependiendo la accion correspondiente
 		undoButton.setOnAction(event ->{
 
-			if(canvasState.getUnDoSize() == 0) {
-				throw new NothingToDoException(undoButton.getText());
+			try {
+				canvasState.undoAction();
+			} catch (NothingToDoException ex) {
+				showAlarm(ex.getMessage());
 			}
-
-			canvasState.undoAction();
-			undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
-			redoLabel.setText(String.format("[%d] %s", canvasState.getReDoSize() ,canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():""));
+			updateLabels();
 			redrawCanvas();
-
-
 		});
 
 		//realiza el redo dependiendo de la accion correspondiente
@@ -237,9 +238,7 @@ public class PaintPane extends BorderPane {
 			} catch(NothingToDoException ex) {
 				showAlarm(ex.getMessage());
 			}
-
-			redoLabel.setText(String.format("[%d] %s", canvasState.getReDoSize() ,canvasState.getReDoSize() != 0 ?canvasState.getRedoLastAction():""));
-			undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
+			updateLabels();
 			redrawCanvas();
 		});
 
@@ -345,9 +344,9 @@ public class PaintPane extends BorderPane {
 		alert.showAndWait();
 	}
 
-	private void callToUnDo(ActionType type, Figure oldFigure, Figure newFigure){
+	/*private void callToUnDo(ActionType type, Figure oldFigure, Figure newFigure){
 		canvasState.toUndo(type, oldFigure, newFigure);
-	}
+	}*/
 
 	private void updateLabels(){
 		undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
