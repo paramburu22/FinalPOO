@@ -28,24 +28,36 @@ public class CanvasState {
         list.add(figure);
     }
 
-    public void toUndo(ActionType actionType,Figure figure) {
-        unDo.add(new PaintAction(actionType,figure, this, list.indexOf(figure)));
+    public void toUndo(ActionType actionType,Figure oldFigure, Figure newFigure) {
+        unDo.add(new PaintAction(actionType, oldFigure, newFigure, this));
     }
 
     public void toRedo(ActionType actionType,Figure figure) {
-        reDo.add(new PaintAction(actionType,figure, this, list.lastIndexOf(figure)));
+        //reDo.add(new PaintAction(actionType,figure, this, list.lastIndexOf(figure)));
+
     }
 
     public void deleteFigure(Figure figure) {
         list.remove(figure);
     }
 
-    public PaintAction deleteUndoAction() {
-        return unDo.removeLast();
+    public void undoAction() {
+        PaintAction action = unDo.getLast();
+        if(action.getActionType() != ActionType.DELETE || action.getActionType() != ActionType.DRAW)
+            Collections.replaceAll(list,action.getNewFigure(),action.getOldFigure());
+        /*if(action.getOldFigure() != action.getNewFigure()){
+        list.replaceAll(var-> {
+            if(var == action.getNewFigure())
+                return action.getOldFigure();
+            return var;
+        } );
+        }*/
+        action.undo();
+        unDo.removeLast();
     }
 
-    public void redrawFigure() {
-        addFigure(unDo.getLast().getUndoFigure());
+    public void redrawFigure(Figure oldFigure) {
+        addFigure(oldFigure);
     }
 
     public void deleteFigureByIdx(int idx){

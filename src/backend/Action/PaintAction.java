@@ -5,33 +5,38 @@ import backend.model.Figure;
 
 public class PaintAction {
     private final ActionType action;
-    private final Figure figure;
+    private final Figure oldFigure;
+    private final Figure newFigure;
     private final CanvasState canvas;
-    private final int figureIdx;
 
-    public PaintAction(ActionType action, Figure figure,CanvasState canvas,int figureIdx){
+    public PaintAction(ActionType action, Figure oldFigure, Figure newFigure,CanvasState canvas){
         this.action = action;
-        this.figure = figure;
+        this.newFigure = newFigure;
+        this.oldFigure = oldFigure;
         this.canvas = canvas;
-        this.figureIdx = figureIdx;
     }
 
     public void undo() {
         if(action != ActionType.DELETE)
-            canvas.deleteFigureByIdx(figureIdx);
+            canvas.deleteFigure(newFigure);
         if(action != ActionType.DRAW)
-            canvas.redrawFigure();
+            canvas.redrawFigure(oldFigure);
         //action.undo(canvas);
         //canvas.toRedo(action, canvas.getListFigure(0));
-        canvas.deleteUndoAction();
     }
 
-    public Figure getUndoFigure() {
-        return figure;
+    public ActionType getActionType() {
+        return action;
+    }
+
+    public Figure getNewFigure() {return newFigure;}
+
+    public Figure getOldFigure() {
+        return oldFigure;
     }
 
     @Override
     public String toString(){
-        return String.format("%s %s",action,figure.getFigureName());
+        return String.format("%s %s",action,newFigure.getFigureName());
     }
 }

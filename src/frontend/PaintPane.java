@@ -110,7 +110,7 @@ public class PaintPane extends BorderPane {
 				if(figureButton.isSelected()) {
 					Figure newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
 					canvasState.addFigure(newFigure);
-					canvasState.toUndo(ActionType.DRAW, newFigure);
+					canvasState.toUndo(ActionType.DRAW, newFigure, newFigure);
 				}
 			}
 
@@ -148,8 +148,9 @@ public class PaintPane extends BorderPane {
 		//cambiar el color del borde
 		lineColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				canvasState.toUndo(ActionType.LINECOLOR, selectedFigure.clone());
+				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.setLineColor(lineColorPicker.getValue());
+				canvasState.toUndo(ActionType.LINECOLOR, oldFigure, selectedFigure);
 			}
 			redrawCanvas();
 		});
@@ -157,8 +158,9 @@ public class PaintPane extends BorderPane {
 		//cambiar el color del relleno
 		fillColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				canvasState.toUndo(ActionType.FILLCOLOR, selectedFigure.clone());
+				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
+				canvasState.toUndo(ActionType.FILLCOLOR, oldFigure, selectedFigure);
 			}
 			redrawCanvas();
 		});
@@ -166,7 +168,7 @@ public class PaintPane extends BorderPane {
 		//borrar la figura
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
-				canvasState.toUndo(ActionType.DELETE, selectedFigure.clone());
+				canvasState.toUndo(ActionType.LINECOLOR, selectedFigure, selectedFigure);
 				canvasState.deleteFigure(selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
@@ -176,23 +178,25 @@ public class PaintPane extends BorderPane {
 		// incrementa 10% las dimensiones de la figura
 		increaseButton.setOnAction(event->{
 			if(selectedFigure != null) {
-				canvasState.toUndo(ActionType.INCREASE, selectedFigure.clone());
+				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.increase();
+				canvasState.toUndo(ActionType.INCREASE, oldFigure, selectedFigure);
 				redrawCanvas();
 			}
 		});
 		// decrementa 10% las dimensiones de la figura
 		decreaseButton.setOnAction(event-> {
 			if(selectedFigure != null) {
-				canvasState.toUndo(ActionType.DECREASE, selectedFigure.clone());
+				Figure oldFigure = selectedFigure.clone();
 				selectedFigure.decrease();
+				canvasState.toUndo(ActionType.DECREASE, oldFigure, selectedFigure);
 				redrawCanvas();
 			}
 		});
 
 		// realiza el undo dependiendo la accion correspondiente
 		undoButton.setOnAction(event ->{
-			canvasState.getLastAction().undo();
+			canvasState.undoAction();
 			undoLabel.setText(String.format("%s",canvasState.getUnDoSize() != 0 ?canvasState.getLastAction():"0"));
 			redrawCanvas();
 		});
