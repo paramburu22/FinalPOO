@@ -10,6 +10,7 @@ public class DrawableCircle extends Circle {
 
     private GraphicsContext gc;
 
+
     public DrawableCircle(Point centerPoint, double radius, Color lineColor, Color backGroundColor, double lineWidth, GraphicsContext gc) {
         super(centerPoint, radius, lineColor, backGroundColor, lineWidth);
         this.gc = gc;
@@ -20,16 +21,21 @@ public class DrawableCircle extends Circle {
     public void draw() {
         double diameter = getRadius() * 2;
         gc.fillOval(getCenterPoint().getX() - getRadius(), getCenterPoint().getY() - getRadius(), diameter, diameter);
-        gc.strokeOval(getCenterPoint().getX() - getRadius() , getCenterPoint().getY() - getRadius(),  diameter, diameter);
+        gc.strokeOval(getCenterPoint().getX() - getRadius(), getCenterPoint().getY() - getRadius(), diameter, diameter);
     }
 
     public GraphicsContext getGc() {
         return gc;
     }
 
-
     @Override
-    public DrawableCircle copy(DrawableCircle figure) {
-        return new DrawableCircle(figure.get);
+    public Figure clone() {
+        return new DrawableCircle(this.getCenterPoint(), this.getRadius(), this.getLineColor(), this.getBackGroundColor(), this.getLineWidth(), this.gc);
     }
+
+    /*@Override
+    public DrawableCircle copy(DrawableCircle figure) {
+        return new DrawableCircle(figure.getCenterPoint(), );
+    }*/
+
 }

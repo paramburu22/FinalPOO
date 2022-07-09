@@ -23,16 +23,17 @@ public class CanvasState {
 
     private final List<Figure> list = new ArrayList<>();
 
+
     public void addFigure(Figure figure) {
         list.add(figure);
     }
 
     public void toUndo(ActionType actionType,Figure figure) {
-        unDo.add(new PaintAction(actionType,figure, this));
+        unDo.add(new PaintAction(actionType,figure, this, list.indexOf(figure)));
     }
 
     public void toRedo(ActionType actionType,Figure figure) {
-        reDo.add(new PaintAction(actionType,figure, this));
+        reDo.add(new PaintAction(actionType,figure, this, list.lastIndexOf(figure)));
     }
 
     public void deleteFigure(Figure figure) {
@@ -47,17 +48,11 @@ public class CanvasState {
         addFigure(unDo.getLast().getUndoFigure());
     }
 
-    public void deleteLastFigure(){
-        if(list.size()!=0)
-            deleteFigure(unDo.getLast().getUndoFigure());
-    }
-
-    public Figure getListFigure(int index) {
-        return list.get(index);
-    }
-
-    public int getFigureIndex(Figure figure) {
-        return list.indexOf(figure);
+    public void deleteFigureByIdx(int idx){
+        if(list.size()!=0) {
+            System.out.println("BORRANDO FIGURA VIEJA");
+            deleteFigure(list.get(idx));
+        }
     }
 
     public PaintAction getLastAction(){

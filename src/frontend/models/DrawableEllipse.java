@@ -18,4 +18,10 @@ public class DrawableEllipse extends Ellipse {
         gc.strokeOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
         gc.fillOval(getCenterPoint().getX() - (getsMayorAxis() / 2), getCenterPoint().getY() - (getsMinorAxis() / 2), getsMayorAxis(), getsMinorAxis());
     }
+
+    @Override
+    public DrawableEllipse clone() {
+        return new DrawableEllipse(this.getCenterPoint(), this.getsMayorAxis() , this.getsMinorAxis() , this.getLineColor(), this.getBackGroundColor(), this.getLineWidth(), this.gc);
+    }
+
 }

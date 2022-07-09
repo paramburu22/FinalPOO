@@ -4,7 +4,7 @@ import backend.Interfaces.*;
 import frontend.Buttons.FigureMaker;
 import javafx.scene.paint.Color;
 
-public abstract class Figure<T> implements Drawable, Modificable, Selectable, Movable, Copiable<T> {
+public abstract class Figure implements Drawable, Modificable, Selectable, Movable {
 
     private Color lineColor;
     private Color backGroundColor;
@@ -49,5 +49,5 @@ public abstract class Figure<T> implements Drawable, Modificable, Selectable, Mo
 
     public abstract String getFigureName();
 
-    public abstract T copy();
+    public abstract Figure clone();
 }

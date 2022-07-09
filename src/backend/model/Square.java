@@ -4,21 +4,16 @@ import javafx.scene.paint.Color;
 
 public abstract class Square extends Rectangle {
 
+    private double size;
+
     public Square(Point topLeft, double size, Color lineColor, Color backGroundColor, double lineWidth) {
         super(topLeft,new Point(topLeft.x + size, topLeft.y + size),lineColor,backGroundColor,lineWidth);
-    }
-
-    public Point getTopLeft() {
-        return topLeft;
-    }
-
-    public Point getBottomRight() {
-        return bottomRight;
+        this.size = size;
     }
 
     @Override
     public String toString() {
-        return String.format("Cuadrado [ %s , %s ]", topLeft, bottomRight);
+        return String.format("Cuadrado [ %s , %s ]", this.getTopLeft(), this.getBottomRight());
     }
 
     @Override
@@ -29,5 +24,9 @@ public abstract class Square extends Rectangle {
     @Override
     public String getFigureName(){
         return "Cuadrado";
+    }
+
+    public double getSize() {
+        return size;
     }
 }

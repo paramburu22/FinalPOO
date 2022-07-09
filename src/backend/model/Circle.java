@@ -13,7 +13,7 @@ public abstract class Circle extends Ellipse {
 
     @Override
     public String toString() {
-        return String.format("Círculo [Centro: %s , Radio: %.2f}]", centerPoint, radius);
+        return String.format("Círculo [Centro: %s , Radio: %.2f}]", getCenterPoint(), radius);
     }
 
     @Override
@@ -22,7 +22,7 @@ public abstract class Circle extends Ellipse {
     }
 
     public Point getCenterPoint() {
-        return centerPoint;
+        return super.getCenterPoint();
     }
 
     public double getRadius() {
@@ -42,6 +42,10 @@ public abstract class Circle extends Ellipse {
         return Math.sqrt(Math.pow(getCenterPoint().getX() - point.getX(), 2) +
                 Math.pow(getCenterPoint().getY() - point.getY(), 2)) < getRadius();
     }
-
+/*
+    public Figure copy(){
+        super(centerPoint,2* radius,2*radius,getLineColor(),getBackGroundColor(),getLineWidth());
+    }
+    */
 }
 

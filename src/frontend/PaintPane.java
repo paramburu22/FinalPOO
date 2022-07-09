@@ -148,7 +148,7 @@ public class PaintPane extends BorderPane {
 		//cambiar el color del borde
 		lineColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				canvasState.toUndo(ActionType.LINECOLOR, selectedFigure);
+				canvasState.toUndo(ActionType.LINECOLOR, selectedFigure.clone());
 				selectedFigure.setLineColor(lineColorPicker.getValue());
 			}
 			redrawCanvas();
@@ -157,8 +157,7 @@ public class PaintPane extends BorderPane {
 		//cambiar el color del relleno
 		fillColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				Figure undoFigure = selectedFigure;
-				canvasState.toUndo(ActionType.FILLCOLOR, undoFigure);
+				canvasState.toUndo(ActionType.FILLCOLOR, selectedFigure.clone());
 				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
 			}
 			redrawCanvas();
@@ -167,8 +166,8 @@ public class PaintPane extends BorderPane {
 		//borrar la figura
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
+				canvasState.toUndo(ActionType.DELETE, selectedFigure.clone());
 				canvasState.deleteFigure(selectedFigure);
-				canvasState.toUndo(ActionType.DELETE, selectedFigure);
 				selectedFigure = null;
 				redrawCanvas();
 			}
@@ -177,16 +176,16 @@ public class PaintPane extends BorderPane {
 		// incrementa 10% las dimensiones de la figura
 		increaseButton.setOnAction(event->{
 			if(selectedFigure != null) {
+				canvasState.toUndo(ActionType.INCREASE, selectedFigure.clone());
 				selectedFigure.increase();
-				canvasState.toUndo(ActionType.INCREASE, selectedFigure);
 				redrawCanvas();
 			}
 		});
 		// decrementa 10% las dimensiones de la figura
 		decreaseButton.setOnAction(event-> {
 			if(selectedFigure != null) {
+				canvasState.toUndo(ActionType.DECREASE, selectedFigure.clone());
 				selectedFigure.decrease();
-				canvasState.toUndo(ActionType.DECREASE, selectedFigure);
 				redrawCanvas();
 			}
 		});

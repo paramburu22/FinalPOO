@@ -19,4 +19,9 @@ public class DrawableSquare extends Square {
         gc.strokeRect(getTopLeft().getX(), getTopLeft().getY(),
                 Math.abs(getTopLeft().getX() - getBottomRight().getX()), Math.abs(getTopLeft().getY() - getBottomRight().getY()));
     }
+
+    @Override
+    public DrawableSquare clone() {
+        return new DrawableSquare(this.getTopLeft(), this.getSize(), this.getLineColor(), this.getBackGroundColor(), this.getLineWidth(), this.gc);
+    }
 }

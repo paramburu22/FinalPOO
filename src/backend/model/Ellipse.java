@@ -4,8 +4,8 @@ import javafx.scene.paint.Color;
 
 public abstract class Ellipse extends Figure {
 
-    protected Point centerPoint;
-    protected double sMayorAxis, sMinorAxis;
+    private Point centerPoint;
+    private double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis, Color lineColor, Color backGroundColor, double lineWidth) {
         super(lineColor,backGroundColor,lineWidth);

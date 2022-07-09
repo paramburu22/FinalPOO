@@ -7,16 +7,18 @@ public class PaintAction {
     private final ActionType action;
     private final Figure figure;
     private final CanvasState canvas;
+    private final int figureIdx;
 
-    public PaintAction(ActionType action, Figure figure, CanvasState canvas){
+    public PaintAction(ActionType action, Figure figure,CanvasState canvas,int figureIdx){
         this.action = action;
         this.figure = figure;
         this.canvas = canvas;
+        this.figureIdx = figureIdx;
     }
 
-    public void undo(){
+    public void undo() {
         if(action != ActionType.DELETE)
-            canvas.deleteLastFigure();
+            canvas.deleteFigureByIdx(figureIdx);
         if(action != ActionType.DRAW)
             canvas.redrawFigure();
         //action.undo(canvas);
