@@ -30,11 +30,17 @@ public class PaintPane extends BorderPane {
 	private static final double INITIAL_BORDER = 1;
 	private static final Color LINE_COLOR = Color.BLACK;
 	private static final Color FILL_COLOR = Color.YELLOW;
+	private static final double CANVAS_HEIGHT = 600;
+	private static final double CANVAS_WIDTH = 800;
+	private static final double BUTTON_WIDTH = 90;
+	private static final double PADDING = 5;
 
 
 	// Canvas y relacionados
-	Canvas canvas = new Canvas(800, 600);
+	Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
+
+
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
@@ -55,6 +61,7 @@ public class PaintPane extends BorderPane {
 	FigureToggleButton[] figureButtonsArr = { rectangleButton, circleButton, squareButton, ellipseButton};
 	ToggleButton[] listOfButtons = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton,increaseButton, decreaseButton, undoButton,redoButton};
 	ColorPicker[] listOfColorPickers = {lineColorPicker, fillColorPicker};
+	Label[] listOfLabels = {undoLabel,redoLabel};
 	Control[] leftControls = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton, new Label("Borde"), slider, lineColorPicker, new Label("Relleno"), fillColorPicker,increaseButton, decreaseButton};
 	Control[] topControls = {undoLabel, undoButton,redoButton, redoLabel};
 
@@ -76,8 +83,8 @@ public class PaintPane extends BorderPane {
 		setButtonsProps(listOfButtons,tools);
 		setColorPickersProps(listOfColorPickers);
 		setSliderProps(slider);
-
-
+		setLabelsProps(listOfLabels);
+		
 		VBox buttonsBox = setButtonsBox(leftControls);
 		HBox topButtonsBox = setTopButtonsBox(topControls);
 
@@ -106,6 +113,7 @@ public class PaintPane extends BorderPane {
 			if(startPoint == null || endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
+
 			//cuando suelto el mouse se crea la figura.
 			for(FigureToggleButton figureButton : figureButtonsArr){
 				if(figureButton.isSelected()) {
@@ -237,7 +245,7 @@ public class PaintPane extends BorderPane {
 	private VBox setButtonsBox(Control[] controls){
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(controls);
-		buttonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
+		buttonsBox.setPadding(new Insets(PADDING)); //espacio entre los bordes y el boton
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		return buttonsBox;
@@ -245,7 +253,7 @@ public class PaintPane extends BorderPane {
 	private HBox setTopButtonsBox(Control[] controls){
 		HBox topButtonsBox = new HBox(10);
 		topButtonsBox.getChildren().addAll(topControls);
-		topButtonsBox.setPadding(new Insets(5)); //espacio entre los bordes y el boton
+		topButtonsBox.setPadding(new Insets(PADDING)); //espacio entre los bordes y el boton
 		topButtonsBox.setStyle("-fx-background-color: #999");
 		topButtonsBox.setPrefHeight(25);
 		topButtonsBox.setAlignment(Pos.CENTER);
@@ -255,22 +263,28 @@ public class PaintPane extends BorderPane {
 
 	private void setButtonsProps(ToggleButton[] toolsArr, ToggleGroup tools){
 		for (ToggleButton tool : toolsArr) {
-			tool.setMinWidth(90);
+			tool.setPrefWidth(BUTTON_WIDTH);
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
 	}
 	private void setColorPickersProps(ColorPicker[] colorPickers) {
 		for (ColorPicker colorPicker : colorPickers) {
-			colorPicker.setMinWidth(90);
+			colorPicker.setPrefWidth(BUTTON_WIDTH);
 			colorPicker.setCursor(Cursor.HAND);
 		}
+	}
+	private void setLabelsProps(Label[] labels) {
+		for (Label label : labels) {
+			label.setPrefWidth((CANVAS_WIDTH / 2) - BUTTON_WIDTH - (PADDING*3));
+		}
+		labels[0].setAlignment(Pos.TOP_RIGHT);
 	}
 	private void setSliderProps(Slider slider) {
 		slider.setShowTickMarks(true);
 		slider.setShowTickLabels(true);
 		slider.setMajorTickUnit(25);
-		slider.setMinWidth(90);
+		slider.setPrefWidth(BUTTON_WIDTH);
 		slider.setCursor(Cursor.HAND);
 	}
 	Figure figureStatus(Point eventPoint, StringBuilder label) {
