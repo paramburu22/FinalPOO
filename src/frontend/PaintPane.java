@@ -124,11 +124,14 @@ public class PaintPane extends BorderPane {
 				if(figureButton.isSelected()) {
 					Figure newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
 					canvasState.addFigure(newFigure);
-					//canvasState.toUndo(ActionType.DRAW, newFigure.clone(), newFigure);
-					canvasState.toUndo(ActionType.DRAW, newFigure.clone(), newFigure);
+					try {
+						canvasState.toUndo(ActionType.DRAW, newFigure);
+					} catch (NothingSelectedException ex) {
+						showAlarm(ex.getMessage());
+					}
+					updateLabels();
 				}
 			}
-
 			startPoint = null;
 			redrawCanvas();
 		});
@@ -152,43 +155,55 @@ public class PaintPane extends BorderPane {
 		//mover la figura
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
-				Point eventPoint = new Point(event.getX(), event.getY());
-				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
-				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
-				selectedFigure.move(diffX,diffY);
-				redrawCanvas();
+				if(selectedFigure != null) {
+					Point eventPoint = new Point(event.getX(), event.getY());
+					double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
+					double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
+					selectedFigure.move(diffX, diffY);
+					redrawCanvas();
+				}
 			}
 		});
 
 		//cambiar el color del borde
 		lineColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				canvasState.toUndo(ActionType.LINECOLOR, selectedFigure.clone(), selectedFigure);
+				try {
+					canvasState.toUndo(ActionType.LINECOLOR, selectedFigure);
+				} catch (NothingSelectedException ex) {
+					showAlarm(ex.getMessage());
+					return;
+				}
 				selectedFigure.setLineColor(lineColorPicker.getValue());
+				updateLabels();
+				redrawCanvas();
 			}
-			updateLabels();
-			redrawCanvas();
 		});
 
 		//cambiar el color del relleno
 		fillColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
-				canvasState.toUndo(ActionType.FILLCOLOR, selectedFigure.clone(), selectedFigure);
+				try {
+					canvasState.toUndo(ActionType.FILLCOLOR, selectedFigure);
+				} catch (NothingSelectedException ex) {
+					showAlarm(ex.getMessage());
+					return;
+				}
 				selectedFigure.setBackGroundColor(fillColorPicker.getValue());
+				updateLabels();
+				redrawCanvas();
 			}
-			updateLabels();
-			redrawCanvas();
+
 		});
 
 		//borrar la figura
 		deleteButton.setOnAction(event -> {
 			try {
-				canvasState.checkSelectedFigureIsNull(ActionType.INCREASE,selectedFigure);
+				canvasState.toUndo(ActionType.DELETE, selectedFigure);
 			} catch (NothingSelectedException ex) {
 				showAlarm(ex.getMessage());
 				return;
 			}
-			canvasState.toUndo(ActionType.DELETE, selectedFigure.clone(), selectedFigure);
 			canvasState.deleteFigure(selectedFigure);
 			selectedFigure = null;
 			updateLabels();
@@ -198,13 +213,12 @@ public class PaintPane extends BorderPane {
 		// incrementa 10% las dimensiones de la figura
 		increaseButton.setOnAction(event->{
 			try{
-				canvasState.checkSelectedFigureIsNull(ActionType.INCREASE,selectedFigure);
+				canvasState.toUndo(ActionType.INCREASE, selectedFigure);
 			}
 			catch (NothingSelectedException ex){
 				showAlarm(ex.getMessage());
 				return;
 			}
-			canvasState.toUndo(ActionType.DECREASE, selectedFigure.clone(), selectedFigure);
 			selectedFigure.decrease();
 			updateLabels();
 			redrawCanvas();
@@ -212,13 +226,12 @@ public class PaintPane extends BorderPane {
 		// decrementa 10% las dimensiones de la figura
 		decreaseButton.setOnAction(event-> {
 			try{
-				canvasState.checkSelectedFigureIsNull(ActionType.DECREASE,selectedFigure);
+					canvasState.toUndo(ActionType.DECREASE, selectedFigure);
 			}
 			catch (NothingSelectedException ex){
 				showAlarm(ex.getMessage());
 				return;
 			}
-			canvasState.toUndo(ActionType.DECREASE, selectedFigure.clone(), selectedFigure);
 			selectedFigure.decrease();
 			updateLabels();
 			redrawCanvas();
