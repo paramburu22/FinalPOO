@@ -53,25 +53,21 @@ public class CanvasState {
             throw new NothingToDoException("Deshacer");
         PaintAction action = unDo.getLast();
         unDo.removeLast();
-
-        System.out.println(String.format("Cuadrado en lista: %s", list.get(action.getIndex())));
-        Figure redoOldFigure = list.get(action.getIndex()).clone();
-        System.out.println(String.format("Cuadrado en lista clonado: %s", redoOldFigure));
-        //si es DRAW solo elimino la figura
-        if(action.getActionType() == ActionType.DRAW) {
-            toRedo(action.getActionType(), redoOldFigure, list.get(action.getIndex()));
-            list.remove(action.getIndex());
-            return;
-        }
         //si es DELETE vuelvo a agregarla a la lista en la misma posicion en la que estaba
         if(action.getActionType() == ActionType.DELETE) {
             replaceFigureInList(action);
             toRedo(action.getActionType(), list.get(action.getIndex()).clone(), list.get(action.getIndex()));
             return;
         }
+        Figure redoOldFigure = list.get(action.getIndex()).clone();
+        //si es DRAW solo elimino la figura
+        if(action.getActionType() == ActionType.DRAW) {
+            toRedo(action.getActionType(), redoOldFigure, list.get(action.getIndex()));
+            list.remove(action.getIndex());
+            return;
+        }
         list.set(action.getIndex(), action.getOldFigure());
         //paso la accion a redo (accion type, figura actual y figura A LA QUE SE QUIERE VOLVER
-        System.out.println(String.format("Cuadrado antes de redo: %s", redoOldFigure.toString()));
         toRedo(action.getActionType(), redoOldFigure, list.get(action.getIndex()));
     }
 
