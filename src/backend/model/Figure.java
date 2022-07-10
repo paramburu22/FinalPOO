@@ -50,5 +50,6 @@ public abstract class Figure implements Drawable, Modificable, Selectable, Movab
 
     public abstract String getFigureName();
 
+    //Metodo clone implementado en los drawables que permite desde una figura devolver una copia de ella
     public abstract Figure clone();
 }

@@ -10,16 +10,6 @@ import java.util.*;
 import java.util.List;
 
 public class CanvasState {
-
-    /*private Figure selectedFigure;
-
-    public void setSelectedFigure(Figure selectedFigure) {
-        this.selectedFigure = selectedFigure;
-    }
-    public Figure getSelectedFigure(){
-        return selectedFigure;
-    }*/
-
     private final Deque<PaintAction> unDo = new LinkedList<>();
 
     private final Deque<PaintAction> reDo = new LinkedList<>();
@@ -30,14 +20,13 @@ public class CanvasState {
         list.add(figure);
     }
 
-    //agrega acciones a unDo
+    //Agrega acciones a unDo
     public void toUndo(ActionType action, Figure figure) throws NothingSelectedException {
         if(figure == null)
             throw new NothingSelectedException(action.toString());
         unDo.add(new PaintAction(action, figure.clone(), list.indexOf(figure)));
-        //cada vez que se agrega una accion a undo, vacio la cola de redo
+        //Cada vez que se agrega una accion a undo, vacio la cola de redo
         reDo.clear();
-        System.out.println(String.format("%s %s", action.toString(), figure.getFigureName()));
     }
 
     public void deleteFigure(Figure figure) {
@@ -53,22 +42,21 @@ public class CanvasState {
             throw new NothingToDoException("Deshacer");
         PaintAction action = unDo.getLast();
         unDo.removeLast();
-        //si es DELETE vuelvo a agregarla a la lista en la misma posicion en la que estaba
+        //Si es DELETE solo vuelvo a agregarla a la lista en la misma posicion en la que estaba
         if(action.getActionType() == ActionType.DELETE) {
             replaceFigureInList(action);
-            toRedo(action.getActionType(), list.get(action.getIndex()).clone(), list.get(action.getIndex()));
+            reDo.add(new PaintAction(action.getActionType(), list.get(action.getIndex()).clone(), action.getIndex()));
             return;
         }
-        Figure redoOldFigure = list.get(action.getIndex()).clone();
-        //si es DRAW solo elimino la figura
+        //Si es DRAW solo elimino la figura
         if(action.getActionType() == ActionType.DRAW) {
-            toRedo(action.getActionType(), redoOldFigure, list.get(action.getIndex()));
+            reDo.add(new PaintAction(action.getActionType(), list.get(action.getIndex()).clone(), action.getIndex()));
             list.remove(action.getIndex());
             return;
         }
+        reDo.add(new PaintAction(action.getActionType(), list.get(action.getIndex()).clone(), action.getIndex()));
+        //Si no es DELETE ni DRAW seteo en la lista la vieja figura
         list.set(action.getIndex(), action.getOldFigure());
-        //paso la accion a redo (accion type, figura actual y figura A LA QUE SE QUIERE VOLVER
-        toRedo(action.getActionType(), redoOldFigure, list.get(action.getIndex()));
     }
 
     public PaintAction getUndoLastAction() {
@@ -83,9 +71,6 @@ public class CanvasState {
         return unDo;
     }
 
-    public void toRedo(ActionType action, Figure currentFigure, Figure redoListFigure) {
-        reDo.add(new PaintAction(action, currentFigure, list.indexOf(redoListFigure)));
-    }
 
     public void redoAction() throws NothingToDoException {
         if(reDo.size() == 0)
@@ -99,14 +84,12 @@ public class CanvasState {
        }
        Figure undoOldFigure = list.get(action.getIndex()).clone();
        if(action.getActionType() == ActionType.DELETE) {
-          // toUndo(action.getActionType(), undoOldFigure, list.get(action.getIndex()));
            unDo.add(new PaintAction(action.getActionType(), undoOldFigure, action.getIndex()));
            list.remove(action.getIndex());
            return;
        }
        list.set(action.getIndex(), action.getOldFigure());
-        unDo.add(new PaintAction(action.getActionType(), undoOldFigure, action.getIndex()));
-      // toUndo(action.getActionType(), undoOldFigure, list.get(action.getIndex()));
+       unDo.add(new PaintAction(action.getActionType(), undoOldFigure, action.getIndex()));
     }
 
     public void replaceFigureInList(PaintAction action) {
@@ -125,6 +108,4 @@ public class CanvasState {
     public int getReDoSize() { return reDo.size(); }
 
     public PaintAction getRedoLastAction() { return reDo.getLast(); }
-
-
 }

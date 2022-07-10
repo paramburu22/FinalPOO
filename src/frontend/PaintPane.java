@@ -39,6 +39,9 @@ public class PaintPane extends BorderPane {
 	private static final double CANVAS_WIDTH = 800;
 	private static final double BUTTON_WIDTH = 90;
 	private static final double PADDING = 5;
+	private static final double SLIDER_MINVALUE = 1;
+	private static final double SLIDER_MAXVALUE = 50;
+	private static final double BOX_VALUE = 5;
 
 
 	// Canvas y relacionados
@@ -54,7 +57,7 @@ public class PaintPane extends BorderPane {
 	FigureToggleButton squareButton = new SquareButton("Cuadrado");
 	FigureToggleButton ellipseButton = new EllipseButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
-	Slider slider = new Slider(1, 50, INITIAL_BORDER);
+	Slider slider = new Slider(SLIDER_MINVALUE, SLIDER_MAXVALUE, INITIAL_BORDER);
 	ColorPicker lineColorPicker = new ColorPicker(LINE_COLOR);
 	ColorPicker fillColorPicker = new ColorPicker(FILL_COLOR);
 	ToggleButton increaseButton = new ToggleButton("Agrandar");
@@ -85,6 +88,7 @@ public class PaintPane extends BorderPane {
 
 		ToggleGroup tools = new ToggleGroup();
 
+
 		setButtonsProps(listOfButtons,tools);
 		setColorPickersProps(listOfColorPickers);
 		setSliderProps(slider);
@@ -94,8 +98,8 @@ public class PaintPane extends BorderPane {
 		HBox topButtonsBox = setTopButtonsBox(topControls);
 
 
-		//relaciono el slider del borde con el setlinewidth de la figura seleccionada.
-		// Esto hace que se pueda ver el nuevo borde mientras lo arrastras y no tener que esperar a soltar. 
+		//Relaciono el slider del borde con el setlinewidth de la figura seleccionada.
+		//Esto hace que se pueda ver el nuevo borde mientras lo arrastras y no tener que esperar a soltar. 
 		slider.valueProperty().addListener((observable, oldValue, newValue) -> {
 				if (selectedFigure !=null ) {
 					selectedFigure.setLineWidth((double) newValue);
@@ -103,23 +107,23 @@ public class PaintPane extends BorderPane {
 				}
 		});
 
-		// creacion del punto de inicio donde a continuacion creara la figura
+		//Reacion del punto de inicio donde a continuacion creara la figura
 		canvas.setOnMousePressed(event -> {
-			//no es lo mismo que un click. Es cuando empieza a mantener apretado.
+			//No es lo mismo que un click. Es cuando empieza a mantener apretado.
 			startPoint = new Point(event.getX(), event.getY());
 		});
 
-		//creacion de figura
+		//Creacion de figura
 		canvas.setOnMouseReleased(event -> {
-			//cuando lo suelto
+			//Cuando lo suelto
 			Point endPoint = new Point(event.getX(), event.getY());
 
-			//tengo que soltar abajo a la derecha
+			//Tengo que soltar abajo a la derecha
 			if(startPoint == null || endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
-				return ;
+				return;
 			}
 
-			//cuando suelto el mouse se crea la figura.
+			//Cuando suelto el mouse se crea la figura.
 			for(FigureToggleButton figureButton : figureButtonsArr){
 				if(figureButton.isSelected()) {
 					Figure newFigure = figureButton.make(startPoint, endPoint, lineColorPicker.getValue(), fillColorPicker.getValue(), slider.getValue(), gc);
@@ -136,7 +140,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//cuando muevo el mouse si tener clickeado nada
+		//Cuando muevo el mouse si tener clickeado nada
 		canvas.setOnMouseMoved(event -> {
 			if (selectedFigure == null)
 				figureStatus(new Point(event.getX(), event.getY()), new StringBuilder());
@@ -152,7 +156,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		//mover la figura
+		//Mover la figura
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
 				if(selectedFigure != null) {
@@ -165,7 +169,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		//cambiar el color del borde
+		//Cambiar el color del borde
 		lineColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
 				try {
@@ -180,7 +184,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-		//cambiar el color del relleno
+		//Cambiar el color del relleno
 		fillColorPicker.setOnAction(event->{
 			if(selectedFigure != null) {
 				try {
@@ -196,7 +200,7 @@ public class PaintPane extends BorderPane {
 
 		});
 
-		//borrar la figura
+		//Borrar la figura
 		deleteButton.setOnAction(event -> {
 			try {
 				canvasState.toUndo(ActionType.DELETE, selectedFigure);
@@ -210,7 +214,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		// incrementa 10% las dimensiones de la figura
+		//Incrementa 10% las dimensiones de la figura
 		increaseButton.setOnAction(event->{
 			try{
 				canvasState.toUndo(ActionType.INCREASE, selectedFigure);
@@ -223,7 +227,8 @@ public class PaintPane extends BorderPane {
 			updateLabels();
 			redrawCanvas();
 		});
-		// decrementa 10% las dimensiones de la figura
+		
+		//Decrementa 10% las dimensiones de la figura
 		decreaseButton.setOnAction(event-> {
 			try{
 					canvasState.toUndo(ActionType.DECREASE, selectedFigure);
@@ -237,7 +242,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 			});
 
-		// realiza el undo dependiendo la accion correspondiente
+		//Realiza el undo dependiendo la accion correspondiente
 		undoButton.setOnAction(event ->{
 
 			try {
@@ -249,7 +254,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
-		//realiza el redo dependiendo de la accion correspondiente
+		//Realiza el redo dependiendo de la accion correspondiente
 		redoButton.setOnAction(event ->{
 			try {
 				canvasState.redoAction();
@@ -266,7 +271,6 @@ public class PaintPane extends BorderPane {
 	}
 
 	void redrawCanvas() {
-
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for (Figure figure:canvasState.figures()) {
 			System.out.println(String.format("%s",figure));
@@ -300,8 +304,6 @@ public class PaintPane extends BorderPane {
 		topButtonsBox.setAlignment(Pos.CENTER);
 		return topButtonsBox;
 	}
-
-
 	private void setButtonsProps(ToggleButton[] toolsArr, ToggleGroup tools){
 		for (ToggleButton tool : toolsArr) {
 			tool.setPrefWidth(BUTTON_WIDTH);
@@ -341,30 +343,13 @@ public class PaintPane extends BorderPane {
 		statusPane.updateStatus(eventPoint.toString());
 		return null;
 	}
-
-
-//
-//	public class NothingToDoException extends RuntimeException {
-//		private final static String MESSAGE = "No hay acciones para ";
-//		public NothingToDoException(String text) {
-//			super(MESSAGE + text);
-//			Alert alert = new Alert(Alert.AlertType.ERROR);
-//			alert.setTitle("Error");
-//			alert.setHeaderText(MESSAGE + text);
-//			alert.showAndWait();
-//		}
-//	}
-
+	
 	private void showAlarm(String message){
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("Error");
 		alert.setHeaderText(message);
 		alert.showAndWait();
 	}
-
-	/*private void callToUnDo(ActionType type, Figure oldFigure, Figure newFigure){
-		canvasState.toUndo(type, oldFigure, newFigure);
-	}*/
 
 	private void updateLabels(){
 		undoLabel.setText(String.format("%s [%d]", canvasState.getUnDoSize() != 0 ? canvasState.getUndoLastAction() : "", canvasState.getUnDoSize()));
