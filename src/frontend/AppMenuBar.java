@@ -4,6 +4,10 @@ import javafx.scene.control.*;
 
 import java.util.Optional;
 
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+
 public class AppMenuBar extends MenuBar {
 
     public AppMenuBar() {
@@ -28,7 +32,10 @@ public class AppMenuBar extends MenuBar {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Acerca De");
             alert.setHeaderText("Paint");
-            alert.setContentText("TPE Final POO Julio 2022");
+            Image image = new Image("frontend/icon.png");
+            ImageView imageView = new ImageView(image);
+            alert.setGraphic(imageView);
+            alert.setContentText("TPE Final POO Julio 2022 - Grupo" + "\n" + "Bruno Enzo Baumgart - 62161"+ "\n" + "Paz Aramburu - 62556"+ "\n" + "Gregorio Maspero - 62486");
             alert.showAndWait();
         });
         help.getItems().add(aboutMenuItem);

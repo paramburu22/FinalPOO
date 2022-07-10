@@ -225,7 +225,7 @@ public class PaintPane extends BorderPane {
 				showAlarm(ex.getMessage());
 				return;
 			}
-			selectedFigure.decrease();
+			selectedFigure.increase();
 			updateLabels();
 			redrawCanvas();
 		});
