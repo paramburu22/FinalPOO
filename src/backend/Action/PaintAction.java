@@ -5,8 +5,8 @@ import backend.model.Figure;
 
 public class PaintAction {
     private final ActionType actionType;
-    private final Figure oldFigure;
-    private final int idx;
+    private final Figure oldFigure; //figura que queremos reemplazar al apretar deshacer
+    private final int idx; //indice donde se encuentra la figura a modificar en list
 
     public PaintAction(ActionType action, Figure oldFigure, int idx){
         this.oldFigure = oldFigure;

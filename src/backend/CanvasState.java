@@ -10,17 +10,18 @@ import java.util.*;
 import java.util.List;
 
 public class CanvasState {
-    private final Deque<PaintAction> unDo = new LinkedList<>();
-
-    private final Deque<PaintAction> reDo = new LinkedList<>();
 
     private final List<Figure> list = new ArrayList<>();
+
+    //Tanto undo como redo son colas de PaintAction de manera que siempre se saca la ultima accion agregada
+    private final Deque<PaintAction> unDo = new LinkedList<>();
+    private final Deque<PaintAction> reDo = new LinkedList<>();
 
     public void addFigure(Figure figure) {
         list.add(figure);
     }
 
-    //Agrega acciones a unDo
+    //Se llama cada vez que se realiza una accion del tipo DREW, DELETE, FILLCOLOR, LINECOLOR, INCREASE o DECRESE
     public void toUndo(ActionType action, Figure figure) throws NothingSelectedException {
         if(figure == null)
             throw new NothingSelectedException(action.toString());
@@ -33,10 +34,12 @@ public class CanvasState {
         list.remove(figure);
     }
 
+    //Devuelvo la lista de figuras
     public List<Figure> figures() {
         return new ArrayList<>(list);
     }
 
+    //Se llama al apretar el boton Deshacer
     public void undoAction() throws NothingToDoException {
         if(unDo.size() == 0)
             throw new NothingToDoException("Deshacer");
@@ -71,7 +74,7 @@ public class CanvasState {
         return unDo;
     }
 
-
+    //Se llama al apretar el boton Rehacer
     public void redoAction() throws NothingToDoException {
         if(reDo.size() == 0)
             throw new NothingToDoException("Rehacer");
@@ -92,6 +95,8 @@ public class CanvasState {
        unDo.add(new PaintAction(action.getActionType(), undoOldFigure, action.getIndex()));
     }
 
+    //Metodo utilizado cuando se hace undo de DELETE o cuando se hace redo de DRAW
+    //Se quiere volver a poner la figura vieja en su posicion original en la lista, cambiando las figuras siguientes a una posicion mas
     public void replaceFigureInList(PaintAction action) {
         Figure last = action.getOldFigure();
         for (int i = action.getIndex(); i <= list.size(); i++) {
